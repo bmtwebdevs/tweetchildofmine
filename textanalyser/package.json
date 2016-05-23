@@ -1,0 +1,20 @@
+{
+  "name": "tweetchildofmine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tcom",
+  "scripts": {
+    "start": "node tcom",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bmtwebdevs/tweetchildofmine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bmtwebdevs/tweetchildofmine/issues"
+  },
+  "homepage": "https://github.com/bmtwebdevs/tweetchildofmine#readme"
+}
