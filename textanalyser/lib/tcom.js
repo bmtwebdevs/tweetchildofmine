@@ -19,13 +19,15 @@ var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
-var _async = require('async');
+var _lodash = require('lodash');
 
-var _async2 = _interopRequireDefault(_async);
+var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var tweets = [];
 
 var TextAnalyser = exports.TextAnalyser = function () {
 	function TextAnalyser() {
@@ -33,19 +35,29 @@ var TextAnalyser = exports.TextAnalyser = function () {
 	}
 
 	_createClass(TextAnalyser, [{
-		key: 'writeLine',
-		value: function writeLine(line) {
-			console.log(line);
-		}
-	}, {
 		key: 'parseFile',
 		value: function parseFile(file) {
+			var _this = this;
 
 			_fs2.default.createReadStream(file).pipe((0, _csvParse2.default)({ delimiter: ',' }).on('data', function (csvrow) {
-				console.log(csvrow);
+				var tweettext = csvrow[5];
+				var sentimentresult = (0, _sentiment2.default)(tweettext);
+				var scoretweet = {
+					score: sentimentresult.score,
+					tweet: tweettext
+				};
+				tweets.push(scoretweet);
 				//do something with csvrow
 				//csvData.push(csvrow);      
+			}).on('end', function () {
+				_this.sortTweets();
 			}));
+		}
+	}, {
+		key: 'sortTweets',
+		value: function sortTweets() {
+			var sortedtweets = _lodash2.default.sortBy(tweets, 'score');
+			console.log(sortedtweets);
 		}
 	}]);
 
@@ -55,8 +67,8 @@ var TextAnalyser = exports.TextAnalyser = function () {
 var analyser = new TextAnalyser();
 
 analyser.parseFile('data/data.csv');
+analyser.sortTweets();
 
-//var r1 = sentiment('great awesome winning at life stupid sick fool');
 //console.log(r1);        // Score: -2, Comparative: -0.666
 
 // var inputFile='myfile.csv';

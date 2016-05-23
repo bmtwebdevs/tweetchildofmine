@@ -1,24 +1,37 @@
 import sentiment from 'sentiment'
 import parse from 'csv-parse';
 import fs from 'fs';
-import async from 'async';
+import _ from 'lodash';
 
-export class TextAnalyser {
-	
-	writeLine(line) {				
-		console.log(line)
-	}
-	
+var tweets = [];
+
+export class TextAnalyser { 
+			
 	parseFile(file) {
 		
 		fs.createReadStream(file)
 			.pipe(parse({delimiter: ','})
 			.on('data', (csvrow) => {
-        		console.log(csvrow);
+				var tweettext = csvrow[5];
+        		var sentimentresult = sentiment(tweettext);
+				var scoretweet = {
+					score:sentimentresult.score,
+					tweet:tweettext
+				};
+				tweets.push(scoretweet);
         		//do something with csvrow
         		//csvData.push(csvrow);        
-    		})							
+    		})	
+			.on('end',()=>{
+				this.sortTweets();
+			})						
 		);				
+	}
+	
+	sortTweets(){
+		var sortedtweets = _.sortBy(tweets, 'score');
+		console.log(sortedtweets);
+		
 	}
 				
 }
@@ -26,8 +39,8 @@ export class TextAnalyser {
 var analyser = new TextAnalyser();
 
 analyser.parseFile('data/data.csv');
+analyser.sortTweets();
 
-//var r1 = sentiment('great awesome winning at life stupid sick fool');
 //console.log(r1);        // Score: -2, Comparative: -0.666
 
 
