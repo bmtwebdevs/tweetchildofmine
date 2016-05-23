@@ -1,9 +1,10 @@
+"use strict";
 var geocoderProvider = 'google';
 var httpAdapter = 'http';
 var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
-import geolocation from "../models/geolocation";
-export class twitterservice {
+const geolocation_1 = require("../models/geolocation");
+class twitterservice {
     constructor() {
         this.client = new Twitter({
             consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
@@ -37,6 +38,16 @@ export class twitterservice {
     }
     getCoordsFromName(name) {
         var geoinfo = this.geocoder.geocoder(name);
-        return new geolocation(geoinfo.latitude, geoinfo.longitude);
+        return new geolocation_1.default(geoinfo.latitude, geoinfo.longitude, '');
+    }
+    getTweets() {
+        return {
+            'manchester': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Manchester'), 10),
+            'bristol': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Bristol'), 10),
+            'birmingham': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Birmingham'), 10),
+            'edinburgh': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Edinburgh'), 10),
+            'london': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'London'), 10)
+        };
     }
 }
+exports.twitterservice = twitterservice;
