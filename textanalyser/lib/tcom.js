@@ -40,17 +40,20 @@ var TextAnalyser = exports.TextAnalyser = function () {
 			var _this = this;
 
 			_fs2.default.createReadStream(file).pipe((0, _csvParse2.default)({ delimiter: ',' }).on('data', function (csvrow) {
-				var tweettext = csvrow[5];
-				var sentimentresult = (0, _sentiment2.default)(tweettext);
-				var scoretweet = {
-					score: sentimentresult.score,
-					tweet: tweettext
+
+				var tweetText = csvrow[5];
+
+				var sentimentResult = (0, _sentiment2.default)(tweetText);
+
+				var scoreTweet = {
+					score: sentimentResult.score,
+					tweet: tweetText
 				};
-				tweets.push(scoretweet);
-				//do something with csvrow
-				//csvData.push(csvrow);      
+
+				tweets.push(scoreTweet);
 			}).on('end', function () {
 				_this.sortTweets();
+				console.log("AVERAGE: " + _this.averageTweets());
 			}));
 		}
 	}, {
@@ -58,6 +61,22 @@ var TextAnalyser = exports.TextAnalyser = function () {
 		value: function sortTweets() {
 			var sortedtweets = _lodash2.default.sortBy(tweets, 'score');
 			console.log(sortedtweets);
+		}
+	}, {
+		key: 'averageTweets',
+		value: function averageTweets() {
+
+			var count = tweets.length;
+
+			var scores = (0, _lodash2.default)(tweets).map(function (tweet) {
+				return tweet.score;
+			});
+
+			var total = (0, _lodash2.default)(scores).reduce();
+
+			var avg = total / count;
+
+			return avg;
 		}
 	}]);
 
@@ -68,18 +87,4 @@ var analyser = new TextAnalyser();
 
 analyser.parseFile('data/data.csv');
 analyser.sortTweets();
-
-//console.log(r1);        // Score: -2, Comparative: -0.666
-
-// var inputFile='myfile.csv';
-//
-// var parser = parse({delimiter: ','}, function (err, data) {
-//   async.eachSeries(data, function (line, callback) {
-//     // do something with the line
-//     doSomething(line).then(function() {
-//       // when processing finishes invoke the callback to move to the next one
-//       callback();
-//     });
-//   }
-// }
 //# sourceMappingURL=tcom.js.map
