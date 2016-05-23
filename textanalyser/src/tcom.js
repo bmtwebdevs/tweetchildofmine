@@ -12,26 +12,44 @@ export class TextAnalyser {
 		fs.createReadStream(file)
 			.pipe(parse({delimiter: ','})
 			.on('data', (csvrow) => {
-				var tweettext = csvrow[5];
-        		var sentimentresult = sentiment(tweettext);
-				var scoretweet = {
-					score:sentimentresult.score,
-					tweet:tweettext
+				
+				var tweetText = csvrow[5];
+				
+        		var sentimentResult = sentiment(tweetText);
+				
+				var scoreTweet = {
+					score: sentimentResult.score,
+					tweet: tweetText
 				};
-				tweets.push(scoretweet);
-        		//do something with csvrow
-        		//csvData.push(csvrow);        
+				
+				tweets.push(scoreTweet);
+        		   
     		})	
-			.on('end',()=>{
+			.on('end', () => {
 				this.sortTweets();
+				console.log("AVERAGE: " + this.averageTweets());
 			})						
 		);				
 	}
 	
 	sortTweets(){
 		var sortedtweets = _.sortBy(tweets, 'score');
-		console.log(sortedtweets);
+		console.log(sortedtweets);		
+	}
+	
+	averageTweets() {
 		
+		var count = tweets.length;
+		
+		var scores = _(tweets).map((tweet) => {
+			return tweet.score
+		});
+		
+		var total = _(scores).reduce();
+		
+		var avg = total / count;
+		
+		return avg;
 	}
 				
 }
@@ -40,20 +58,3 @@ var analyser = new TextAnalyser();
 
 analyser.parseFile('data/data.csv');
 analyser.sortTweets();
-
-//console.log(r1);        // Score: -2, Comparative: -0.666
-
-
-// var inputFile='myfile.csv';
-// 
-// var parser = parse({delimiter: ','}, function (err, data) {
-//   async.eachSeries(data, function (line, callback) {
-//     // do something with the line
-//     doSomething(line).then(function() {
-//       // when processing finishes invoke the callback to move to the next one
-//       callback();
-//     });
-//   }
-// }
-
-
