@@ -47,7 +47,17 @@ export class twitterservice {
         var geoinfo = this.geocoder.geocoder(name);
         return new geolocation(
             geoinfo.latitude,
-            geoinfo.longitude
+            geoinfo.longitude,
+            ''
         );
+    }
+    getTweets(){
+        return {
+            'manchester': this.getTweetsAroundLocation(new geolocation(0,0,'Manchester'), 10),
+            'bristol': this.getTweetsAroundLocation(new geolocation(0,0,'Bristol'), 10),
+            'birmingham': this.getTweetsAroundLocation(new geolocation(0,0,'Birmingham'), 10),
+            'edinburgh': this.getTweetsAroundLocation(new geolocation(0,0,'Edinburgh'), 10),
+            'london':this.getTweetsAroundLocation(new geolocation(0,0,'London'), 10)
+        };
     }
 }
