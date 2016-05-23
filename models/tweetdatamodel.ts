@@ -1,9 +1,6 @@
-///<reference path="../models/geolocation.ts" />
-import geolocation from "./geolocation";
-
-export class tweetdatamodel{
+class tweetdatamodel{
     text: string;
     photo: any;
-    location: geolocation;
+    location: any;
     when: any;
 }
