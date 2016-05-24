@@ -45,6 +45,7 @@ var twitterservice = (function () {
     };
     twitterservice.prototype.getTweets = function () {
         if (this.isApiUpdateRequired()) {
+            this.updateDbWithNewTweets();
         }
         return {
             'manchester': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Manchester'), 10),
@@ -54,8 +55,11 @@ var twitterservice = (function () {
             'london': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'London'), 10)
         };
     };
-    twitterservice.prototype.getTweetsFromDatabase = function () {
+    twitterservice.prototype.convertTweetsToModel = function (tweets) {
         return;
+    };
+    twitterservice.prototype.getTweetsFromDatabase = function () {
+        return this.repository.getTweets();
     };
     twitterservice.prototype.getTweetsFromApi = function () {
         return {
@@ -71,10 +75,13 @@ var twitterservice = (function () {
         var now = Moment();
         var lastCall = Moment(lastApiCallDate);
         var diffMinutes = now.diff(lastCall, 'minutes');
-        if (diffMinutes > 20) {
+        if (diffMinutes > 2) {
             return true;
         }
         return false;
+    };
+    twitterservice.prototype.updateDbWithNewTweets = function () {
+        return;
     };
     return twitterservice;
 }());

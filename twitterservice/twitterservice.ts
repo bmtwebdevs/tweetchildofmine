@@ -42,9 +42,9 @@ export class twitterservice {
         }
 
         return this.client.get(this.querystring, this.params, function(error, tweets, response){
-          if (!error) {
-            return tweets;
-          }
+            if (!error) {
+                return tweets;
+            }
         });
     }
     getCoordsFromName(name){
@@ -57,7 +57,7 @@ export class twitterservice {
     }
     getTweets(){
         if(this.isApiUpdateRequired()){
-            
+            this.updateDbWithNewTweets();
         }
         //TODO if set amount of time has passed, get from twitter and update database, otherwise get from database
 
@@ -73,9 +73,11 @@ export class twitterservice {
             'london':this.getTweetsAroundLocation(new geolocation(0,0,'London'), 10)
         };
     }
+    convertTweetsToModel(tweets){
+        return ;
+    }
     getTweetsFromDatabase(){
-        //TODO Get this to go to the database and return the tweets
-        return
+        return this.repository.getTweets();
     }
     getTweetsFromApi(){
         return {
@@ -87,13 +89,17 @@ export class twitterservice {
         };
     }
     isApiUpdateRequired(){
-                var lastApiCallDate = this.repository.getLastApiCallDate();
-                var now = Moment();
-                var lastCall = Moment(lastApiCallDate);
-                var diffMinutes = now.diff(lastCall, 'minutes');
-                if(diffMinutes > 20){
-                    return true;
-                }
-                return false;
+        var lastApiCallDate = this.repository.getLastApiCallDate();
+        var now = Moment();
+        var lastCall = Moment(lastApiCallDate);
+        var diffMinutes = now.diff(lastCall, 'minutes');
+        if(diffMinutes > 2){
+            return true;
+        }
+        return false;
+    }
+    updateDbWithNewTweets(){
+        //TODO gettweetsfromapi
+        return ;
     }
 }
