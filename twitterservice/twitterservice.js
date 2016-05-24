@@ -3,7 +3,9 @@ var geocoderProvider = 'google';
 var httpAdapter = 'http';
 var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
+var Moment = require('moment');
 const geolocation_1 = require("../models/geolocation");
+const repository_1 = require("../repository/repository");
 class twitterservice {
     constructor() {
         this.client = new Twitter({
@@ -15,6 +17,7 @@ class twitterservice {
         this.params = {};
         this.querystring = 'search/tweets/q=*';
         this.geocoder = new GeoCoder();
+        this.repository = new repository_1.default();
     }
     getTweetsAroundLocation(geolocation, distance) {
         if (geolocation.name != "") {
@@ -41,6 +44,8 @@ class twitterservice {
         return new geolocation_1.default(geoinfo.latitude, geoinfo.longitude, '');
     }
     getTweets() {
+        if (this.isApiUpdateRequired()) {
+        }
         return {
             'manchester': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Manchester'), 10),
             'bristol': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Bristol'), 10),
@@ -48,6 +53,28 @@ class twitterservice {
             'edinburgh': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Edinburgh'), 10),
             'london': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'London'), 10)
         };
+    }
+    getTweetsFromDatabase() {
+        return;
+    }
+    getTweetsFromApi() {
+        return {
+            'manchester': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Manchester'), 10),
+            'bristol': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Bristol'), 10),
+            'birmingham': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Birmingham'), 10),
+            'edinburgh': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Edinburgh'), 10),
+            'london': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'London'), 10)
+        };
+    }
+    isApiUpdateRequired() {
+        var lastApiCallDate = this.repository.getLastApiCallDate();
+        var now = Moment();
+        var lastCall = Moment(lastApiCallDate);
+        var diffMinutes = now.diff(lastCall, 'minutes');
+        if (diffMinutes > 20) {
+            return true;
+        }
+        return false;
     }
 }
 exports.twitterservice = twitterservice;
