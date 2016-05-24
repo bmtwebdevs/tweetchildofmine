@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import http from 'http';
 import TwitterService from '../../twitterservice/twitterservice.js';
 
@@ -8,8 +9,10 @@ app.server = http.createServer(app);
 
 // routes
 app.get('/', (req, res) => {	
-	res.sendFile('../web/index.html');	
+	res.sendFile(path.normalize(__dirname + './../../web/index.html'));	
 });
+
+app.use(express.static(path.normalize(__dirname + './../../web/')));
 
 app.get('/get-tweets', (req, res) => {	
 			
