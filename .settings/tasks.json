@@ -11,7 +11,7 @@
 	"isShellCommand": true,
 	"tasks": [
 		{
-			"args": ["textanalyser/src", "--out-dir", "textanalyser/lib", "-w", "--source-maps"],
+			"args": ["server/src", "--out-dir", "server/lib", "-w", "--source-maps"],
 			"taskName": "watch",
 			"suppressTaskName": true,
 			"isBuildCommand": true, // make this the F1 > Task: Run Build Task gesture
