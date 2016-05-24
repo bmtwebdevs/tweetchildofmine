@@ -79,8 +79,8 @@ export class twitterservice {
         var allTweets = [];
                                 
         var locations = [
-            { latitude: 53.483959, longitude: -2.244644},
-            { latitude: 51.4545, longitude: 2.5879 },
+           // { latitude: 53.483959, longitude: -2.244644},
+            //{ latitude: 51.4545, longitude: 2.5879 },
             { latitude: 52.4862, longitude: 1.8904 }
             ];
             
@@ -93,13 +93,13 @@ export class twitterservice {
             };
                                             
             this.client.get(this.querystring, params, (error, tweets, response) => {   
-                allTweets.push(tweets);   
+                //allTweets.push(tweets);   
                 
                 //console.log(tweets);      
                                 
-                if(index === locations.length) {
-                    cb(allTweets)
-                }           
+                //if(index === locations.length) {
+                    cb(tweets)
+                //}           
             });                        
             
         }

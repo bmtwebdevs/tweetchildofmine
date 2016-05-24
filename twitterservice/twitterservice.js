@@ -53,8 +53,6 @@ var twitterservice = (function () {
     twitterservice.prototype.getTweets2 = function (cb) {
         var allTweets = [];
         var locations = [
-            { latitude: 53.483959, longitude: -2.244644 },
-            { latitude: 51.4545, longitude: 2.5879 },
             { latitude: 52.4862, longitude: 1.8904 }
         ];
         for (var index = 0; index < locations.length; index++) {
@@ -64,10 +62,7 @@ var twitterservice = (function () {
                 geocode: obj.latitude + ',' + obj.longitude + ',' + 10 + 'mi'
             };
             this.client.get(this.querystring, params, function (error, tweets, response) {
-                allTweets.push(tweets);
-                if (index === locations.length) {
-                    cb(allTweets);
-                }
+                cb(tweets);
             });
         }
     };
