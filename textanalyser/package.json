@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "tcom",
-  "scripts": {    
+  "scripts": {
     "start": "node ../server/lib/server.js",
     "test": "test"
   },
@@ -27,6 +27,7 @@
     "csv": "^1.1.0",
     "csv-parse": "^1.1.0",
     "fs": "0.0.2",
+    "http": "0.0.0",
     "lodash": "^4.13.0"
   }
 }
