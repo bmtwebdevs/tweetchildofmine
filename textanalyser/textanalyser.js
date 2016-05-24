@@ -51,7 +51,7 @@ TextAnalyser.prototype.averageTweets = function() {
 			
 module.exports = TextAnalyser;
 
-var analyser = new TextAnalyser();
+// var analyser = new TextAnalyser();
 
-analyser.parseFile('textanalyser/data/data.csv');
-analyser.sortTweets();
+// analyser.parseFile('textanalyser/data/data.csv');
+// analyser.sortTweets();
