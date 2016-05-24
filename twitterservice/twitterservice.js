@@ -5,9 +5,11 @@ var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
 var Moment = require('moment');
 var Lodash = require('lodash');
+var ObjectID = require('mongodb').ObjectID;
 var geolocation_1 = require("../models/geolocation");
 var repository_1 = require("../repository/repository");
 var tweetdatamodel_1 = require("../models/tweetdatamodel");
+var tweetviewmodel_1 = require("../models/tweetviewmodel");
 var twitterservice = (function () {
     function twitterservice() {
         this.client = new Twitter({
@@ -42,20 +44,35 @@ var twitterservice = (function () {
         });
     };
     twitterservice.prototype.getCoordsFromName = function (name) {
-        var geoinfo = this.geocoder.geocoder(name);
+        var geoinfo = this.geocoder.geocode(name);
         return new geolocation_1.default(geoinfo.latitude, geoinfo.longitude, '');
     };
     twitterservice.prototype.getTweets = function () {
-        var tweets = this.getTweetsFromApi();
-        return this.convertTweetsToModel(tweets);
+        return this.getTweetsFromApiAndConvertToViewModel();
     };
-    twitterservice.prototype.convertTweetsToModel = function (tweets) {
+    twitterservice.prototype.getTweetsFromApiAndConvertToViewModel = function () {
+        var tweets = this.getTweetsFromApi();
+        return this.convertTweetsToViewModel(tweets);
+    };
+    twitterservice.prototype.getTweetsFromApiAndConvertToDataModel = function () {
+        var tweets = this.getTweetsFromApi();
+        return this.convertTweetsToDataModel(tweets);
+    };
+    twitterservice.prototype.convertTweetsToViewModel = function (tweets) {
         var parsed = JSON.parse(tweets);
-        var results = Lodash.map(parsed, this.convertEachTweetToModel);
+        var results = Lodash.map(parsed, this.convertEachTweetToViewModel);
         return results;
     };
-    twitterservice.prototype.convertEachTweetToModel = function (tweet) {
-        return new tweetdatamodel_1.default(tweet.text, tweet.photo, new geolocation_1.default(tweet.coordinates[1], tweet.coordinates[0], ''), tweet.when);
+    twitterservice.prototype.convertEachTweetToViewModel = function (tweet) {
+        return new tweetviewmodel_1.default(tweet.text, tweet.entities.media.media_url, new geolocation_1.default(tweet.coordinates[1], tweet.coordinates[0], ''), tweet.when);
+    };
+    twitterservice.prototype.convertTweetsToDataModel = function (tweets) {
+        var parsed = JSON.parse(tweets);
+        var results = Lodash.map(parsed, this.convertEachTweetToDataModel);
+        return results;
+    };
+    twitterservice.prototype.convertEachTweetToDataModel = function (tweet) {
+        return new tweetdatamodel_1.default(new ObjectID(), tweet, null, null, null);
     };
     twitterservice.prototype.getTweetsFromDatabase = function () {
         return this.repository.getTweets();
@@ -80,6 +97,7 @@ var twitterservice = (function () {
         return false;
     };
     twitterservice.prototype.updateDbWithNewTweets = function () {
+        var tweetsFromApi = this.getTweetsFromApiAndConvertToDataModel();
         return;
     };
     return twitterservice;

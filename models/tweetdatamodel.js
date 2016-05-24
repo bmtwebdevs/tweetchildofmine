@@ -1,10 +1,11 @@
 "use strict";
 var tweetdatamodel = (function () {
-    function tweetdatamodel(text, photo, location, when) {
-        this.text = text,
-            this.photo = photo,
-            this.location = location,
-            this.when = when;
+    function tweetdatamodel(id, tweetjson, facedetected, textscore, photoscore) {
+        this.id = id,
+            this.tweetjson = tweetjson,
+            this.facedetected = facedetected,
+            this.textscore = textscore,
+            this.photoscore = photoscore;
     }
     ;
     return tweetdatamodel;
