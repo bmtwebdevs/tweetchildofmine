@@ -5,9 +5,10 @@ var httpAdapter = 'http';
 var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
 var Moment = require('moment');
+var Lodash = require('lodash');
 import geolocation from "../models/geolocation";
 import repository from "../repository/repository";
-
+import tweetdatamodel from "../models/tweetdatamodel";
 export class twitterservice {
     client: any;
     params: any;
@@ -42,9 +43,9 @@ export class twitterservice {
         }
 
         return this.client.get(this.querystring, this.params, function(error, tweets, response){
-          if (!error) {
-            return tweets;
-          }
+            if (!error) {
+                return tweets;
+            }
         });
     }
     getCoordsFromName(name){
@@ -56,26 +57,36 @@ export class twitterservice {
         );
     }
     getTweets(){
-        if(this.isApiUpdateRequired()){
-            
-        }
-        //TODO if set amount of time has passed, get from twitter and update database, otherwise get from database
+        //TODO will get from DB in reality, but set up to do it in real time initially.
+
+        // if(this.isApiUpdateRequired()){
+        //     this.updateDbWithNewTweets();
+        // }
 
         //TODO put keys into config file or similar?
 
-        //TODO have last api call date in database
+        //TODO change this to getTweetsFromDatabase
+        var tweets = this.getTweetsFromApi();
 
-        return {
-            'manchester': this.getTweetsAroundLocation(new geolocation(0,0,'Manchester'), 10),
-            'bristol': this.getTweetsAroundLocation(new geolocation(0,0,'Bristol'), 10),
-            'birmingham': this.getTweetsAroundLocation(new geolocation(0,0,'Birmingham'), 10),
-            'edinburgh': this.getTweetsAroundLocation(new geolocation(0,0,'Edinburgh'), 10),
-            'london':this.getTweetsAroundLocation(new geolocation(0,0,'London'), 10)
-        };
+        return this.convertTweetsToModel(tweets);
+    }
+    convertTweetsToModel(tweets){
+
+        var parsed = JSON.parse(tweets); //is this needed?? does it come through as json objects already?
+        var results = Lodash.map(parsed, this.convertEachTweetToModel);
+
+        return results;
+    }
+    convertEachTweetToModel(tweet){
+        return new tweetdatamodel(
+            tweet.text,
+            tweet.photo,
+            new geolocation(tweet.coordinates[1], tweet.coordinates[0], ''),
+            tweet.when
+        );
     }
     getTweetsFromDatabase(){
-        //TODO Get this to go to the database and return the tweets
-        return
+        return this.repository.getTweets();
     }
     getTweetsFromApi(){
         return {
@@ -87,13 +98,17 @@ export class twitterservice {
         };
     }
     isApiUpdateRequired(){
-                var lastApiCallDate = this.repository.getLastApiCallDate();
-                var now = Moment();
-                var lastCall = Moment(lastApiCallDate);
-                var diffMinutes = now.diff(lastCall, 'minutes');
-                if(diffMinutes > 20){
-                    return true;
-                }
-                return false;
+        var lastApiCallDate = this.repository.getLastApiCallDate();
+        var now = Moment();
+        var lastCall = Moment(lastApiCallDate);
+        var diffMinutes = now.diff(lastCall, 'minutes');
+        if(diffMinutes > 2){
+            return true;
+        }
+        return false;
+    }
+    updateDbWithNewTweets(){
+        //TODO gettweetsfromapi then add to database.  get diff and update rather than overwrite?
+        return ;
     }
 }
