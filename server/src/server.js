@@ -5,7 +5,7 @@ import _ from 'lodash';
 import sentiment from 'sentiment';
 import ts from '../../twitterservice/twitterservice';
 import * as TextAnalyser from '../../textanalyser/textanalyser';
-var Face = require('./recognizerator/face.js');
+import Face from '../../recognizerator/face.js';
 var face = new Face();
 
 var app = express();
@@ -38,19 +38,29 @@ app.use(express.static(path.normalize(__dirname + './../../web/')));
 // 
 app.get('/get-tweets', (req, res) => {
 	
+	var lat = req.query.latitude;
+	var lon = req.query.longitude;
+	
 	var processedTweets = [];
+	
+	var location = {
+		lat: lat,
+		lon: lon
+	};
 						
-	ts.getTweets2((tweets) => {	
-		
+	ts.getTweets2(location, (tweets) => {			
 		_(tweets.statuses).forEach((tweet) => {		
 			processedTweets.push(processTweet(tweet));			
-		});
-						
-		res.json(processedTweets);	
-	});				
+		});	
+		res.json(processedTweets);								
+	});			
+	
+		
 });
 
 function processTweet(tweet) {
+	
+	//console.log(tweet);
 	
 	var tweetModel = {};
 	
@@ -60,16 +70,17 @@ function processTweet(tweet) {
 	// text processing
 	tweetModel.textScore = sentiment(tweet.text).score;
 	
-	// face.analyseMyFaceFromUrl(tweet.url, function(result) {    	
-    // 	console.log(result.statusText, result.emotion);
-	// });
-	// 
-	// // face processing
-	// tweetModel.faceScore = 0;
-	
-	return tweetModel;
-	
-	
+	// face processing		
+	if(tweet.entities.media && tweet.entities.media[0].url) {		
+		face.analyseMyFaceFromUrl(tweet.entities.media[0].url, function(result) {    	
+			//console.log(result.statusText, result.emotion);
+			tweetModel.url = tweet.entities.media[0].url;
+			tweetModel.faceScore = result.emotion;
+			return tweetModel;
+		});
+	} else {	
+		return tweetModel;
+	}		
 }
 // 
 // app.get('/get-db', (req, res) => {	

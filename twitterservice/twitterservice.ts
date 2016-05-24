@@ -74,39 +74,19 @@ export class twitterservice {
 
     }
     
-    getTweets2(cb) {        
-            
-        var allTweets = [];
-                                
-        var locations = [
-           // { latitude: 53.483959, longitude: -2.244644},
-            //{ latitude: 51.4545, longitude: 2.5879 },
-            { latitude: 52.4862, longitude: 1.8904 }
-            ];
-            
-        for (var index = 0; index < locations.length; index++) {
-            
-            var obj = locations[index];
-            var params = {
-                screen_name : 'nodejs',
-                geocode : obj.latitude + ',' + obj.longitude + ',' + 10 + 'mi'
-            };
-                                            
-            this.client.get(this.querystring, params, (error, tweets, response) => {   
-                //allTweets.push(tweets);   
-                
-                //console.log(tweets);      
-                                
-                //if(index === locations.length) {
-                    cb(tweets)
-                //}           
-            });                        
-            
-        }
-        
-        
-
-        
+    getTweets2(location, cb) {        
+                                    
+        var params = {
+            screen_name : 'nodejs',
+            geocode : location.lat + ',' + location.lon + ',' + 10 + 'mi'
+        };
+                                        
+        this.client.get(this.querystring, params, (error, tweets, response) => {
+            //console.log(tweets);   
+            //allTweets.push(tweets);  
+            cb(tweets);                                          
+        });      
+                                                                                                     
     }
 
     getTweets(callback){
