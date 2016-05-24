@@ -5,6 +5,8 @@ import _ from 'lodash';
 import sentiment from 'sentiment';
 import ts from '../../twitterservice/twitterservice';
 import * as TextAnalyser from '../../textanalyser/textanalyser';
+var Face = require('./recognizerator/face.js');
+var face = new Face();
 
 var app = express();
 app.server = http.createServer(app);
@@ -57,6 +59,13 @@ function processTweet(tweet) {
 	
 	// text processing
 	tweetModel.textScore = sentiment(tweet.text).score;
+	
+	// face.analyseMyFaceFromUrl(tweet.url, function(result) {    	
+    // 	console.log(result.statusText, result.emotion);
+	// });
+	// 
+	// // face processing
+	// tweetModel.faceScore = 0;
 	
 	return tweetModel;
 	
