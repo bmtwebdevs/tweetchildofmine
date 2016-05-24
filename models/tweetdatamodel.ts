@@ -1,14 +1,12 @@
 export default class tweetdatamodel{
-    text: string;
-    photo: any;
-    location: any;
-    when: any;
+    tweetjson: any;
+    facedetected: boolean;
     textscore: number;
     photoscore: number;
-    constructor(text, photo, location, when){
-        this.text = text,
-        this.photo = photo,
-        this.location = location,
-        this.when = when
+    constructor(tweetjson, facedetected, textscore, photoscore){
+        this.tweetjson = tweetjson,
+        this.facedetected = facedetected,
+        this.textscore = textscore,
+        this.photoscore = photoscore
     };
 }

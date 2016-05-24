@@ -6,9 +6,11 @@ var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
 var Moment = require('moment');
 var Lodash = require('lodash');
+var ObjectID = require('mongodb').ObjectID;
 import geolocation from "../models/geolocation";
 import repository from "../repository/repository";
 import tweetdatamodel from "../models/tweetdatamodel";
+import tweetviewmodel from "../models/tweetviewmodel";
 export class twitterservice {
     client: any;
     params: any;
@@ -49,7 +51,7 @@ export class twitterservice {
         });
     }
     getCoordsFromName(name){
-        var geoinfo = this.geocoder.geocoder(name);
+        var geoinfo = this.geocoder.geocode(name);
         return new geolocation(
             geoinfo.latitude,
             geoinfo.longitude,
@@ -66,24 +68,38 @@ export class twitterservice {
         //TODO put keys into config file or similar?
 
         //TODO change this to getTweetsFromDatabase
-        var tweets = this.getTweetsFromApi();
-
-        return this.convertTweetsToModel(tweets);
+        return this.getTweetsFromApiAndConvertToViewModel();
     }
-    convertTweetsToModel(tweets){
-
+    getTweetsFromApiAndConvertToViewModel(){
+        var tweets = this.getTweetsFromApi();
+        return this.convertTweetsToViewModel(tweets)
+    }
+    getTweetsFromApiAndConvertToDataModel(){
+        var tweets = this.getTweetsFromApi();
+        return this.convertTweetsToDataModel(tweets);
+    }
+    convertTweetsToViewModel(tweets){
         var parsed = JSON.parse(tweets); //is this needed?? does it come through as json objects already?
-        var results = Lodash.map(parsed, this.convertEachTweetToModel);
+        var results = Lodash.map(parsed, this.convertEachTweetToViewModel);
 
         return results;
     }
-    convertEachTweetToModel(tweet){
-        return new tweetdatamodel(
+    convertEachTweetToViewModel(tweet){
+        return new tweetviewmodel(
             tweet.text,
-            tweet.photo,
+            tweet.entities.media.media_url, //TODO change this
             new geolocation(tweet.coordinates[1], tweet.coordinates[0], ''),
             tweet.when
         );
+    }
+    convertTweetsToDataModel(tweets){
+        var parsed = JSON.parse(tweets); //is this needed?? does it come through as json objects already?
+        var results = Lodash.map(parsed, this.convertEachTweetToDataModel);
+
+        return results;
+    }
+    convertEachTweetToDataModel(tweet){
+        return new tweetdatamodel(tweet, null, null, null);
     }
     getTweetsFromDatabase(){
         return this.repository.getTweets();
@@ -108,7 +124,7 @@ export class twitterservice {
         return false;
     }
     updateDbWithNewTweets(){
-        //TODO gettweetsfromapi then add to database.  get diff and update rather than overwrite?
+        var tweetsFromApi = this.getTweetsFromApiAndConvertToDataModel();
         return ;
     }
 }
