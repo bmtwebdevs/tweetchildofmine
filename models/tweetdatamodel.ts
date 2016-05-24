@@ -5,4 +5,10 @@ export default class tweetdatamodel{
     when: any;
     textscore: number;
     photoscore: number;
+    constructor(text, photo, location, when){
+        this.text = text,
+        this.photo = photo,
+        this.location = location,
+        this.when = when
+    };
 }

@@ -4,8 +4,10 @@ var httpAdapter = 'http';
 var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
 var Moment = require('moment');
+var Lodash = require('lodash');
 var geolocation_1 = require("../models/geolocation");
 var repository_1 = require("../repository/repository");
+var tweetdatamodel_1 = require("../models/tweetdatamodel");
 var twitterservice = (function () {
     function twitterservice() {
         this.client = new Twitter({
@@ -44,19 +46,16 @@ var twitterservice = (function () {
         return new geolocation_1.default(geoinfo.latitude, geoinfo.longitude, '');
     };
     twitterservice.prototype.getTweets = function () {
-        if (this.isApiUpdateRequired()) {
-            this.updateDbWithNewTweets();
-        }
-        return {
-            'manchester': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Manchester'), 10),
-            'bristol': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Bristol'), 10),
-            'birmingham': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Birmingham'), 10),
-            'edinburgh': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Edinburgh'), 10),
-            'london': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'London'), 10)
-        };
+        var tweets = this.getTweetsFromApi();
+        return this.convertTweetsToModel(tweets);
     };
     twitterservice.prototype.convertTweetsToModel = function (tweets) {
-        return;
+        var parsed = JSON.parse(tweets);
+        var results = Lodash.map(parsed, this.convertEachTweetToModel);
+        return results;
+    };
+    twitterservice.prototype.convertEachTweetToModel = function (tweet) {
+        return new tweetdatamodel_1.default(tweet.text, tweet.photo, new geolocation_1.default(tweet.coordinates[1], tweet.coordinates[0], ''), tweet.when);
     };
     twitterservice.prototype.getTweetsFromDatabase = function () {
         return this.repository.getTweets();
