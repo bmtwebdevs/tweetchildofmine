@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "node ../server/lib/server.js",
+    "start": "node server/lib/server.js",
     "test": "test"
   },
   "author": "Doug, Lisa, Matt, Moshin, Conrad",
