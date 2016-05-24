@@ -1,12 +1,13 @@
+"use strict";
 var geocoderProvider = 'google';
 var httpAdapter = 'http';
 var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
 var Moment = require('moment');
-const geolocation_1 = require("../models/geolocation");
-const repository_1 = require("../repository/repository");
-export class twitterservice {
-    constructor() {
+var geolocation_1 = require("../models/geolocation");
+var repository_1 = require("../repository/repository");
+var twitterservice = (function () {
+    function twitterservice() {
         this.client = new Twitter({
             consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
             consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
@@ -18,7 +19,7 @@ export class twitterservice {
         this.geocoder = new GeoCoder();
         this.repository = new repository_1.default();
     }
-    getTweetsAroundLocation(geolocation, distance) {
+    twitterservice.prototype.getTweetsAroundLocation = function (geolocation, distance) {
         if (geolocation.name != "") {
             var coords = this.getCoordsFromName(geolocation.name);
             this.params = {
@@ -37,12 +38,12 @@ export class twitterservice {
                 return tweets;
             }
         });
-    }
-    getCoordsFromName(name) {
+    };
+    twitterservice.prototype.getCoordsFromName = function (name) {
         var geoinfo = this.geocoder.geocoder(name);
-        return new geolocation(geoinfo.latitude, geoinfo.longitude, '');
-    }
-    getTweets() {
+        return new geolocation_1.default(geoinfo.latitude, geoinfo.longitude, '');
+    };
+    twitterservice.prototype.getTweets = function () {
         if (this.isApiUpdateRequired()) {
         }
         return {
@@ -52,20 +53,20 @@ export class twitterservice {
             'edinburgh': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Edinburgh'), 10),
             'london': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'London'), 10)
         };
-    }
-    getTweetsFromDatabase() {
+    };
+    twitterservice.prototype.getTweetsFromDatabase = function () {
         return;
-    }
-    getTweetsFromApi() {
+    };
+    twitterservice.prototype.getTweetsFromApi = function () {
         return {
-            'manchester': this.getTweetsAroundLocation(new geolocation(0, 0, 'Manchester'), 10),
-            'bristol': this.getTweetsAroundLocation(new geolocation(0, 0, 'Bristol'), 10),
-            'birmingham': this.getTweetsAroundLocation(new geolocation(0, 0, 'Birmingham'), 10),
-            'edinburgh': this.getTweetsAroundLocation(new geolocation(0, 0, 'Edinburgh'), 10),
-            'london': this.getTweetsAroundLocation(new geolocation(0, 0, 'London'), 10)
+            'manchester': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Manchester'), 10),
+            'bristol': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Bristol'), 10),
+            'birmingham': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Birmingham'), 10),
+            'edinburgh': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Edinburgh'), 10),
+            'london': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'London'), 10)
         };
-    }
-    isApiUpdateRequired() {
+    };
+    twitterservice.prototype.isApiUpdateRequired = function () {
         var lastApiCallDate = this.repository.getLastApiCallDate();
         var now = Moment();
         var lastCall = Moment(lastApiCallDate);
@@ -74,5 +75,7 @@ export class twitterservice {
             return true;
         }
         return false;
-    }
-}
+    };
+    return twitterservice;
+}());
+exports.twitterservice = twitterservice;
