@@ -1,2 +1,5 @@
-export class tweetdatamodel {
-}
+var tweetdatamodel = (function () {
+    function tweetdatamodel() {
+    }
+    return tweetdatamodel;
+}());
