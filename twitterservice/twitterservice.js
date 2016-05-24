@@ -50,21 +50,14 @@ var twitterservice = (function () {
             });
         }
     };
-    twitterservice.prototype.getTweets2 = function (cb) {
-        var allTweets = [];
-        var locations = [
-            { latitude: 52.4862, longitude: 1.8904 }
-        ];
-        for (var index = 0; index < locations.length; index++) {
-            var obj = locations[index];
-            var params = {
-                screen_name: 'nodejs',
-                geocode: obj.latitude + ',' + obj.longitude + ',' + 10 + 'mi'
-            };
-            this.client.get(this.querystring, params, function (error, tweets, response) {
-                cb(tweets);
-            });
-        }
+    twitterservice.prototype.getTweets2 = function (location, cb) {
+        var params = {
+            screen_name: 'nodejs',
+            geocode: location.lat + ',' + location.lon + ',' + 10 + 'mi'
+        };
+        this.client.get(this.querystring, params, function (error, tweets, response) {
+            cb(tweets);
+        });
     };
     twitterservice.prototype.getTweets = function (callback) {
         this.cb = callback;
