@@ -1,5 +1,10 @@
-import app from 'express';
+import express from 'express';
+import http from 'http';
 import TwitterService from '../../twitterservice/twitterservice.js';
+
+
+var app = express();
+app.server = http.createServer(app);
 
 // routes
 app.get('/', (req, res) => {	

@@ -1,4 +1,3 @@
-"use strict";
 var geocoderProvider = 'google';
 var httpAdapter = 'http';
 var Twitter = require('twitter');
@@ -6,7 +5,7 @@ var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
 var Moment = require('moment');
 const geolocation_1 = require("../models/geolocation");
 const repository_1 = require("../repository/repository");
-class twitterservice {
+export class twitterservice {
     constructor() {
         this.client = new Twitter({
             consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
@@ -41,7 +40,7 @@ class twitterservice {
     }
     getCoordsFromName(name) {
         var geoinfo = this.geocoder.geocoder(name);
-        return new geolocation_1.default(geoinfo.latitude, geoinfo.longitude, '');
+        return new geolocation(geoinfo.latitude, geoinfo.longitude, '');
     }
     getTweets() {
         if (this.isApiUpdateRequired()) {
@@ -59,11 +58,11 @@ class twitterservice {
     }
     getTweetsFromApi() {
         return {
-            'manchester': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Manchester'), 10),
-            'bristol': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Bristol'), 10),
-            'birmingham': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Birmingham'), 10),
-            'edinburgh': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Edinburgh'), 10),
-            'london': this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'London'), 10)
+            'manchester': this.getTweetsAroundLocation(new geolocation(0, 0, 'Manchester'), 10),
+            'bristol': this.getTweetsAroundLocation(new geolocation(0, 0, 'Bristol'), 10),
+            'birmingham': this.getTweetsAroundLocation(new geolocation(0, 0, 'Birmingham'), 10),
+            'edinburgh': this.getTweetsAroundLocation(new geolocation(0, 0, 'Edinburgh'), 10),
+            'london': this.getTweetsAroundLocation(new geolocation(0, 0, 'London'), 10)
         };
     }
     isApiUpdateRequired() {
@@ -77,4 +76,3 @@ class twitterservice {
         return false;
     }
 }
-exports.twitterservice = twitterservice;
