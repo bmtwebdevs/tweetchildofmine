@@ -5,8 +5,8 @@ var httpAdapter = 'http';
 var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
 var Moment = require('moment');
-var Lodash = require('lodash');
-var ObjectID = require('mongodb').ObjectID;
+var _ = require('lodash');
+//var ObjectID = require('mongodb').ObjectID;
 import geolocation from "../models/geolocation";
 import repository from "../repository/repository";
 import tweetdatamodel from "../models/tweetdatamodel";
@@ -17,6 +17,7 @@ export class twitterservice {
     querystring: any;
     geocoder : any;
     repository: any;
+    cb: any;
     constructor(){
         this.client = new Twitter({
           consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
@@ -25,62 +26,116 @@ export class twitterservice {
           access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
         });
         this.params = {};
-        this.querystring = 'search/tweets/q=*';
-        this.geocoder = new GeoCoder();
+        this.querystring = 'search/tweets/';
+        this.geocoder = GeoCoder;
         this.repository = new repository();
     }
     getTweetsAroundLocation(geolocation, distance){
+        
         if(geolocation.name != ""){
-            var coords = this.getCoordsFromName(geolocation.name);
-            this.params = {
-                screen_name: 'nodejs',
-                geocode: coords.latitude + ',' + coords.longitude + ',' + distance + 'mi'
-            };
+            
+            this.geocoder.geocode(geolocation.name).then((results) => {                
+                
+                var coords = results[0];
+                                                                                           
+                this.params = {
+                    screen_name: 'nodejs',
+                    geocode: coords.latitude + ',' + coords.longitude + ',' + distance + 'mi'
+                };                
+                
+                this.client.get(this.querystring, this.params, (error, tweets, response) => {
+                    
+                    // console.log(error);
+                    // console.log(tweets);
+                    // console.log(response);
+                    
+                    if (!error) {
+                        //console.log(tweets);
+                        this.cb(tweets);
+                    }
+                });                
+                
+            });
+                        
+
         }
         else{
             this.params = {
                 screen_name : 'nodejs',
                 geocode : geolocation.latitude + ',' + geolocation.longitude + ',' + distance + 'mi'
             };
+            this.client.get(this.querystring, this.params, function(error, tweets, response){
+                if (!error) {
+                    this.cb(tweets);
+                }
+            });
         }
 
-        return this.client.get(this.querystring, this.params, function(error, tweets, response){
-            if (!error) {
-                return tweets;
-            }
-        });
+
     }
-    getCoordsFromName(name){
-        var geoinfo = this.geocoder.geocode(name);
-        return new geolocation(
-            geoinfo.latitude,
-            geoinfo.longitude,
-            ''
-        );
+    
+    getTweets2(cb) {        
+            
+        var allTweets = [];
+                                
+        var locations = [
+            { latitude: 53.483959, longitude: -2.244644},
+            { latitude: 51.4545, longitude: 2.5879 },
+            { latitude: 52.4862, longitude: 1.8904 }
+            ];
+            
+        for (var index = 0; index < locations.length; index++) {
+            
+            var obj = locations[index];
+            var params = {
+                screen_name : 'nodejs',
+                geocode : obj.latitude + ',' + obj.longitude + ',' + 10 + 'mi'
+            };
+                                            
+            this.client.get(this.querystring, params, (error, tweets, response) => {   
+                allTweets.push(tweets);   
+                
+                //console.log(tweets);      
+                                
+                if(index === locations.length) {
+                    cb(allTweets)
+                }           
+            });                        
+            
+        }
+        
+        
+
+        
     }
-    getTweets(){
+
+    getTweets(callback){
         //TODO will get from DB in reality, but set up to do it in real time initially.
 
         // if(this.isApiUpdateRequired()){
         //     this.updateDbWithNewTweets();
         // }
+        this.cb = callback;
 
         //TODO put keys into config file or similar?
 
         //TODO change this to getTweetsFromDatabase
-        return this.getTweetsFromApiAndConvertToViewModel();
+        this.getTweetsFromApiAndConvertToViewModel();
     }
     getTweetsFromApiAndConvertToViewModel(){
-        var tweets = this.getTweetsFromApi();
-        return this.convertTweetsToViewModel(tweets)
+        var data = this.getTweetsFromApi();
+                
+        return this.convertTweetsToViewModel(data);        
+        
     }
     getTweetsFromApiAndConvertToDataModel(){
         var tweets = this.getTweetsFromApi();
         return this.convertTweetsToDataModel(tweets);
     }
     convertTweetsToViewModel(tweets){
-        var parsed = JSON.parse(tweets); //is this needed?? does it come through as json objects already?
-        var results = Lodash.map(parsed, this.convertEachTweetToViewModel);
+        //console.log(tweets);
+        //var parsed = JSON.parse(tweets); //is this needed?? does it come through as json objects already?
+        var results = _.map(tweets, this.convertEachTweetToViewModel);
 
         return results;
     }
@@ -94,7 +149,7 @@ export class twitterservice {
     }
     convertTweetsToDataModel(tweets){
         var parsed = JSON.parse(tweets); //is this needed?? does it come through as json objects already?
-        var results = Lodash.map(parsed, this.convertEachTweetToDataModel);
+        var results = _.map(parsed, this.convertEachTweetToDataModel);
 
         return results;
     }
@@ -104,14 +159,17 @@ export class twitterservice {
     getTweetsFromDatabase(){
         return this.repository.getTweets();
     }
-    getTweetsFromApi(){
-        return {
-            'manchester': this.getTweetsAroundLocation(new geolocation(0,0,'Manchester'), 10),
-            'bristol': this.getTweetsAroundLocation(new geolocation(0,0,'Bristol'), 10),
-            'birmingham': this.getTweetsAroundLocation(new geolocation(0,0,'Birmingham'), 10),
-            'edinburgh': this.getTweetsAroundLocation(new geolocation(0,0,'Edinburgh'), 10),
-            'london':this.getTweetsAroundLocation(new geolocation(0,0,'London'), 10)
-        };
+    getTweetsFromApi() : any{
+        
+        this.getTweetsAroundLocation(new geolocation(0,0,'Manchester'), 10);
+        
+        // return {
+        //     'manchester': this.getTweetsAroundLocation(new geolocation(0,0,'Manchester'), 10),
+        //     'bristol': this.getTweetsAroundLocation(new geolocation(0,0,'Bristol'), 10),
+        //     'birmingham': this.getTweetsAroundLocation(new geolocation(0,0,'Birmingham'), 10),
+        //     'edinburgh': this.getTweetsAroundLocation(new geolocation(0,0,'Edinburgh'), 10),
+        //     'london':this.getTweetsAroundLocation(new geolocation(0,0,'London'), 10)
+        // };
     }
     isApiUpdateRequired(){
         var lastApiCallDate = this.repository.getLastApiCallDate();
@@ -128,3 +186,7 @@ export class twitterservice {
         return ;
     }
 }
+
+var TwitterService = new twitterservice();
+
+export default TwitterService;
