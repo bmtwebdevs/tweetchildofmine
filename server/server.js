@@ -1,18 +1,17 @@
-import express from 'express';
-import path from 'path';
-import http from 'http';
-import TwitterService from '../../twitterservice/twitterservice.js';
-
+var express = require('express');
+var path = require('path');
+var http = require('http');
+var TwitterService = require( '../twitterservice/twitterservice.js');
 
 var app = express();
 app.server = http.createServer(app);
 
 // routes
 app.get('/', (req, res) => {	
-	res.sendFile(path.normalize(__dirname + './../../web/index.html'));	
+	res.sendFile(path.normalize(__dirname + './../web/index.html'));	
 });
 
-app.use(express.static(path.normalize(__dirname + './../../web/')));
+app.use(express.static(path.normalize(__dirname + './../web/')));
 
 app.get('/get-tweets', (req, res) => {	
 			
