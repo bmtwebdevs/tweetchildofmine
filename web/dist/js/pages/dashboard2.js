@@ -6,6 +6,25 @@ $(function () {
    * -------
    * Here we will create a few charts using ChartJS
    */
+   
+   $.ajax({
+     url: '/get-tweets',
+     dataType: 'json',
+     success: function(data) {
+       //data.then((result) => {
+         console.log(data);
+       //})
+       showTweets(data);
+     }
+   });
+
+function showTweets() {
+  
+  //var html = 
+  
+  $('tweetTable').html();
+  
+}
 
   //-----------------------
   //- MONTHLY SALES CHART -

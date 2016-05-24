@@ -2,7 +2,7 @@ declare function require(name:string);
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var url = 'mongodb://localhost:27017/tweets';
-var ObjectId = require('mongodb').ObjectID;
+//var ObjectId = require('mongodb').ObjectID;
 
 export default class repository{
     getLastApiCallDate(){
