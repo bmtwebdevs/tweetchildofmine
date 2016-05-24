@@ -39,20 +39,20 @@ function showTweets() {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
       {
-        label: "Electronics",
-        fillColor: "rgb(210, 214, 222)",
-        strokeColor: "rgb(210, 214, 222)",
-        pointColor: "rgb(210, 214, 222)",
+        label: "Happy",
+        fillColor: "red",
+        strokeColor: "red",
+        pointColor: "red",
         pointStrokeColor: "#c1c7d1",
         pointHighlightFill: "#fff",
         pointHighlightStroke: "rgb(220,220,220)",
         data: [65, 59, 80, 81, 56, 55, 40]
       },
       {
-        label: "Digital Goods",
-        fillColor: "rgba(60,141,188,0.9)",
-        strokeColor: "rgba(60,141,188,0.8)",
-        pointColor: "#3b8bba",
+        label: "Sad",
+        fillColor: "green",
+        strokeColor: "green",
+        pointColor: "green",
         pointStrokeColor: "rgba(60,141,188,1)",
         pointHighlightFill: "#fff",
         pointHighlightStroke: "rgba(60,141,188,1)",
@@ -118,37 +118,37 @@ function showTweets() {
       value: 700,
       color: "#f56954",
       highlight: "#f56954",
-      label: "Chrome"
+      label: "Negative"
     },
     {
       value: 500,
       color: "#00a65a",
       highlight: "#00a65a",
-      label: "IE"
+      label: "Positive"
     },
     {
       value: 400,
       color: "#f39c12",
       highlight: "#f39c12",
-      label: "FireFox"
+      label: "Neutral"
     },
     {
       value: 600,
       color: "#00c0ef",
       highlight: "#00c0ef",
-      label: "Safari"
+      label: "Smiling"
     },
     {
       value: 300,
       color: "#3c8dbc",
       highlight: "#3c8dbc",
-      label: "Opera"
+      label: "Angry"
     },
     {
       value: 100,
       color: "#d2d6de",
       highlight: "#d2d6de",
-      label: "Navigator"
+      label: "No Emotion"
     }
   ];
   var pieOptions = {
@@ -175,7 +175,7 @@ function showTweets() {
     //String - A legend template
     legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>",
     //String - A tooltip template
-    tooltipTemplate: "<%=value %> <%=label%> users"
+    tooltipTemplate: "<%=value %> <%=label%>"
   };
   //Create pie or douhnut chart
   // You can switch between pie and douhnut using the method below.
@@ -189,7 +189,7 @@ function showTweets() {
    * Create a world map with markers
    */
   $('#world-map-markers').vectorMap({
-    map: 'uk_countries_mill',
+      map: 'uk_countries_mill',
     normalizeFunction: 'polynomial',
     hoverOpacity: 0.7,
     hoverColor: false,
@@ -218,32 +218,13 @@ function showTweets() {
       }
     },
     markers: [
-      {latLng: [41.90, 12.45], name: 'Vatican City'},
-      {latLng: [43.73, 7.41], name: 'Monaco'},
-      {latLng: [-0.52, 166.93], name: 'Nauru'},
-      {latLng: [-8.51, 179.21], name: 'Tuvalu'},
-      {latLng: [43.93, 12.46], name: 'San Marino'},
-      {latLng: [47.14, 9.52], name: 'Liechtenstein'},
-      {latLng: [7.11, 171.06], name: 'Marshall Islands'},
-      {latLng: [17.3, -62.73], name: 'Saint Kitts and Nevis'},
-      {latLng: [3.2, 73.22], name: 'Maldives'},
-      {latLng: [35.88, 14.5], name: 'Malta'},
-      {latLng: [12.05, -61.75], name: 'Grenada'},
-      {latLng: [13.16, -61.23], name: 'Saint Vincent and the Grenadines'},
-      {latLng: [13.16, -59.55], name: 'Barbados'},
-      {latLng: [17.11, -61.85], name: 'Antigua and Barbuda'},
-      {latLng: [-4.61, 55.45], name: 'Seychelles'},
-      {latLng: [7.35, 134.46], name: 'Palau'},
-      {latLng: [42.5, 1.51], name: 'Andorra'},
-      {latLng: [14.01, -60.98], name: 'Saint Lucia'},
-      {latLng: [6.91, 158.18], name: 'Federated States of Micronesia'},
-      {latLng: [1.3, 103.8], name: 'Singapore'},
-      {latLng: [1.46, 173.03], name: 'Kiribati'},
-      {latLng: [-21.13, -175.2], name: 'Tonga'},
-      {latLng: [15.3, -61.38], name: 'Dominica'},
-      {latLng: [-20.2, 57.5], name: 'Mauritius'},
-      {latLng: [26.02, 50.55], name: 'Bahrain'},
-      {latLng: [0.33, 6.73], name: 'São Tomé and Príncipe'}
+      {latLng: [51.45, -2.58], name: 'Bristol'},
+      {latLng: [51.48, -0.11], name: 'London'},
+      {latLng: [52.48, -1.89], name: 'Birmingham'},
+      {latLng: [53.48, -2.24], name: 'Manchester'},
+      {latLng: [54.98, -1.59], name: 'Newcastle'},
+      {latLng: [55.95, -3.18], name: 'Edinburgh'},
+      {latLng: [55.83, -4.24], name: 'Glasglow'},                                                                                                                                                                  
     ]
   });
 
