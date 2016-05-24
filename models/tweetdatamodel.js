@@ -1,8 +1,7 @@
 "use strict";
 var tweetdatamodel = (function () {
-    function tweetdatamodel(id, tweetjson, facedetected, textscore, photoscore) {
-        this.id = id,
-            this.tweetjson = tweetjson,
+    function tweetdatamodel(tweetjson, facedetected, textscore, photoscore) {
+        this.tweetjson = tweetjson,
             this.facedetected = facedetected,
             this.textscore = textscore,
             this.photoscore = photoscore;

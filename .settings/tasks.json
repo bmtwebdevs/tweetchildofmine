@@ -7,7 +7,7 @@
 // ${cwd}: the current working directory of the spawned process
 {
 	"version": "0.1.0",
-	"command": "${workspaceRoot}/textanalyser/node_modules/.bin/babel",
+	"command": "${workspaceRoot}/node_modules/.bin/babel",
 	"isShellCommand": true,
 	"tasks": [
 		{
