@@ -4,6 +4,10 @@ var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
@@ -19,8 +23,10 @@ app.server = _http2.default.createServer(app);
 
 // routes
 app.get('/', function (req, res) {
-			res.sendFile('../web/index.html');
+			res.sendFile(_path2.default.normalize(__dirname + './../../web/index.html'));
 });
+
+app.use(_express2.default.static(_path2.default.normalize(__dirname + './../../web/')));
 
 app.get('/get-tweets', function (req, res) {
 

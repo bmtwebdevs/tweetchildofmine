@@ -38,3 +38,6 @@ models/geolocation.js
 server/lib/server.js
 server/lib/server.js
 server/lib/server.js
+server/lib/server.js.map
+*.map
+server/lib/server.js
