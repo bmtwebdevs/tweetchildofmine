@@ -1,28 +1,33 @@
 var oxfordEmotion = require("node-oxford-emotion")("94bbf0c64e9b47c88faa8db3875aeb37")
-var Recognizerator = function () {};
-var _ = require("lodash");
 
+var Recognizerator = function () {};
+        
 Recognizerator.prototype.analyseMyFaceFromUrl = function(imageUrl, cb) { 
-    var emotion = oxfordEmotion.recognize("url", imageUrl, function(emotions) {
-        var highestEmotions = [];
+    var result = {};
+    oxfordEmotion.recognize("url", imageUrl, function(emotionResults) {
+        var emotions = [];
         // get the most occuring emotion in the picture
-        if(emotions.length > 0) { // can have more than one face in a photo
-            for(emotion in emotions) {
+        if(emotionResults.length > 0) { // can have more than one face in a photo
+            for(var i = 0; i < emotionResults.length; i++) {
+                var emotion = emotionResults[i];
                 var sortable = [];
-                for (var score in emotions[emotion].scores) {
-                    sortable.push([score, emotions[emotion].scores[score]])
+                for (var score in emotion.scores) {
+                    sortable.push([score, emotion.scores[score]])
                 }
-                sortable.sort(function(a, b) {return b[1] - a[1] })
-                var highestEmotion = sortable[0][0];
-                var foundEmotion = highestEmotions.find(function(o) { return o.emotion  === highestEmotion});
+                sortable.sort(function(a, b) {return b[1] - a[1] }); // sort with highest first
+                var highestEmotion = sortable[0][0]; // vom
+                // see if the emotion is in the list of emotions
+                var foundEmotion = emotions.find(function(o) { return o.emotion  === highestEmotion});
                 if(foundEmotion) {
-                     foundEmotion.count ++;
+                    foundEmotion.count ++;
                 } else {
-                    highestEmotions.push({emotion: highestEmotion, count: 1});
+                    emotions.push({emotion: highestEmotion, count: 1});
                 }
                 
             }
-            highestEmotions.sort(function(a, b) {
+            
+            // sort by most occuring emotion first. If there are more than one then sort alphatically by emotion
+            emotions.sort(function(a, b) {
                 if(a.count< b.count) return 1;
                 if(a.count >b.count) return -1;
                 if(a.emotion< b.emotion) return -1;
@@ -30,10 +35,11 @@ Recognizerator.prototype.analyseMyFaceFromUrl = function(imageUrl, cb) {
                 return 0;
             })
             
-            cb({ statusText: "Success", emotion:  highestEmotions[0].emotion});
+            result = { statusText: "Success", emotion:  emotions[0].emotion };
         } else {
-            cb({ statusText: "No Face detected" });
-        }
+            result = { statusText: "Success", emotion: "none" }
+        }  
+        cb(result);
     });
 }
 
