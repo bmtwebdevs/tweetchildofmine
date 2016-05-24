@@ -1,17 +1,17 @@
 {
-  "name": "tweetchildofmine",
+  "name": "recognizerator",
   "version": "1.0.0",
   "description": "",
-  "main": "tcom",
+  "main": "main.js",
   "scripts": {
     "start": "node ../server/lib/server.js",
     "test": "test"
   },
+  "author": "Doug, Lisa, Matt, Moshin, Conrad",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bmtwebdevs/tweetchildofmine.git"
   },
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bmtwebdevs/tweetchildofmine/issues"
@@ -29,6 +29,10 @@
     "fs": "0.0.2",
     "http": "0.0.0",
     "lodash": "^4.13.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "node-oxford-emotion": "^1.0.4",
+    "moment": "^2.13.0",
+    "node-geocoder": "^3.10.0",
+    "twitter": "^1.3.0"
   }
 }
