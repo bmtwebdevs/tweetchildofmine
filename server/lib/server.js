@@ -67,11 +67,13 @@ app.use(_express2.default.static(_path2.default.normalize(__dirname + './../../w
 
 app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 
-	var bath = ['51.3758', '-2.3599'];
-	var sanFrancisco = ['-122.75', '36.8', '-121.75', '37.8'];
-	var newYork = ['-74,40', '-73,41'];
+	// var bath = ['51.3758', '-2.3599'];
+	// var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
+	// var newYork = ['-74,40','-73,41'];
 
-	var stream = client.stream('statuses/filter', { track: 'sanFrancisco' });
+	console.log(req.query);
+
+	var stream = client.stream('statuses/filter', { track: req.query.search });
 
 	stream.on('data', function (tweet) {
 		var processedTweet = JSON.stringify(processTweet(tweet));
@@ -107,7 +109,7 @@ app.get('/get-tweets', function (req, res) {
 
 	var processedTweets = [];
 
-	_twitterservice2.default.getTweets2(search, function (tweets) {
+	_twitterservice2.default.getTweetsBySearchTerm(search, function (tweets) {
 
 		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {
 			processedTweets.push(processTweet(tweet));
@@ -124,6 +126,9 @@ function processTweet(tweet) {
 
 	tweetModel.when = tweet.created_at;
 	tweetModel.text = tweet.text;
+
+	tweetModel.geo = tweet.geo;
+	tweetModel.coordinates = tweet.coordinates;
 
 	// text processing
 	tweetModel.textScore = (0, _sentiment2.default)(tweet.text).score;

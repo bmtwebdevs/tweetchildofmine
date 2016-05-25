@@ -30,11 +30,13 @@ app.use(express.static(path.normalize(__dirname + './../../web/')));
 
 app.get('/tweet-stream', sse, (req, res) => {
 	
-	var bath = ['51.3758', '-2.3599'];
-	var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
-	var newYork = ['-74,40','-73,41'];
+	// var bath = ['51.3758', '-2.3599'];
+	// var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
+	// var newYork = ['-74,40','-73,41'];
 	
-	var stream = client.stream('statuses/filter', {track: 'sanFrancisco'});
+	console.log(req.query);
+	
+	var stream = client.stream('statuses/filter', {track: req.query.search });
         
 	stream.on('data', function(tweet) {		
 		var processedTweet = JSON.stringify(processTweet(tweet));
@@ -72,7 +74,7 @@ app.get('/get-tweets', (req, res) => {
 	
 	var processedTweets = [];
 						
-	ts.getTweets2(search, (tweets) => {	
+	ts.getTweetsBySearchTerm(search, (tweets) => {	
 		
 		_(tweets.statuses).forEach((tweet) => {		
 			processedTweets.push(processTweet(tweet));			
@@ -91,6 +93,9 @@ function processTweet(tweet) {
 	
 	tweetModel.when = tweet.created_at;
 	tweetModel.text = tweet.text;
+	
+	tweetModel.geo = tweet.geo;
+	tweetModel.coordinates = tweet.coordinates;
 	
 	// text processing
 	tweetModel.textScore = sentiment(tweet.text).score;
