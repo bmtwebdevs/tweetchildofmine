@@ -12,6 +12,10 @@ var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
 
+var _serverSentEvents = require('server-sent-events');
+
+var _serverSentEvents2 = _interopRequireDefault(_serverSentEvents);
+
 var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
@@ -32,7 +36,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Face = require('./recognizerator/face.js');
+var Face = require('../../recognizerator/face.js');
 var face = new Face();
 
 var app = (0, _express2.default)();
@@ -62,17 +66,14 @@ app.use(_express2.default.static(_path2.default.normalize(__dirname + './../../w
 // 	
 // });
 //
-app.get('/get-tweets', function (req, res) {
-
-	var processedTweets = [];
+app.get('/get-tweets', _serverSentEvents2.default, function (req, res) {
 
 	_twitterservice2.default.getTweets2(function (tweets) {
 
 		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {
-			processedTweets.push(processTweet(tweet));
+			var processedTweet = JSON.stringify(processTweet(tweet));
+			res.sse('data: ' + processedTweet + '\n\n');
 		});
-
-		res.json(processedTweets);
 	});
 });
 
@@ -85,7 +86,7 @@ function processTweet(tweet) {
 
 	// text processing
 	tweetModel.textScore = (0, _sentiment2.default)(tweet.text).score;
-
+	//console.log(tweet.url);
 	// face.analyseMyFaceFromUrl(tweet.url, function(result) {    	
 	// 	console.log(result.statusText, result.emotion);
 	// });

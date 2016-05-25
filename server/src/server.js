@@ -1,11 +1,12 @@
 import express from 'express';
 import path from 'path';
 import http from 'http';
+import sse from "server-sent-events";
 import _ from 'lodash';
 import sentiment from 'sentiment';
 import ts from '../../twitterservice/twitterservice';
 import * as TextAnalyser from '../../textanalyser/textanalyser';
-var Face = require('./recognizerator/face.js');
+var Face = require('../../recognizerator/face.js');
 var face = new Face();
 
 var app = express();
@@ -36,17 +37,14 @@ app.use(express.static(path.normalize(__dirname + './../../web/')));
 // 	
 // });
 // 
-app.get('/get-tweets', (req, res) => {
+app.get('/get-tweets', sse, (req, res) => {
 	
-	var processedTweets = [];
-						
 	ts.getTweets2((tweets) => {	
 		
 		_(tweets.statuses).forEach((tweet) => {		
-			processedTweets.push(processTweet(tweet));			
+			var processedTweet = JSON.stringify(processTweet(tweet));
+			res.sse('data: ' + processedTweet + '\n\n');			
 		});
-						
-		res.json(processedTweets);	
 	});				
 });
 
@@ -59,7 +57,7 @@ function processTweet(tweet) {
 	
 	// text processing
 	tweetModel.textScore = sentiment(tweet.text).score;
-	
+	//console.log(tweet.url);
 	// face.analyseMyFaceFromUrl(tweet.url, function(result) {    	
     // 	console.log(result.statusText, result.emotion);
 	// });
