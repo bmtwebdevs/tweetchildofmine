@@ -38,6 +38,8 @@ $(function () {
         "</td><td>Bristol</td><td>" +
         "<div class='sparkbar' data-color='#00c0ef' data-height='20'>" +  emotion + "</div>" +
         "</td></tr>");
+        
+      updateLocationTable(tweet.location, emotion);
     }
   }
 
@@ -62,11 +64,23 @@ $(function () {
 
   //     }
 
-function getInitialData(){
+function updateLocationTable(location, emotion){
     var locations = ['manchester','bristol','birmingham','edinburgh','london']
 
     for(var i = 0; i < locations.length; i++){
-
+        var id;
+        
+        if(location === locations[i]){
+          if(emotion >= 0){
+            id = location + '-positive-value';
+          }
+          else{
+            id = location + '-negative-value';
+          }
+          
+          var value = parseInt(document.getElementById(id).value) + 1;
+          $(id).text(value.toString());
+        }
     }
 
     $.ajax({
