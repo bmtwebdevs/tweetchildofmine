@@ -180,18 +180,34 @@
     <section class="content">
       <!-- Info boxes -->
       <div class="row">
-        <div class="col-md-3 col-sm-6 col-xs-12">
+        
+        
+         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
-            <span class="info-box-icon bg-aqua"></i></span>
+            <span class="info-box-icon bg-green"></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">UK Happiness Level</span>
-              <span class="info-box-number">57.15<small>%</small></span>
+              <span class="info-box-text">Overall % Happy</span>
+              <span id="percent-happy" class="info-box-number">0</span>
             </div>
             <!-- /.info-box-content -->
           </div>
           <!-- /.info-box -->
         </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green"></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Happy/Positive Tweets</span>
+              <span id="positive-overall" class="info-box-number">0</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+
         <!-- /.col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
@@ -199,7 +215,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Angry/Negative Tweets</span>
-              <span class="info-box-number">41,410</span>
+              <span id="negative-overall" class="info-box-number">0</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -212,16 +228,17 @@
 
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
-            <span class="info-box-icon bg-green"></span>
+            <span class="info-box-icon bg-blue"></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Happy/Positive Tweets</span>
-              <span class="info-box-number">72,456</span>
+              <span class="info-box-text">Neutral Tweets</span>
+              <span id="neutral-overall" class="info-box-number">0</span>
             </div>
             <!-- /.info-box-content -->
           </div>
           <!-- /.info-box -->
         </div>
+
         <!-- /.col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
@@ -229,7 +246,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Tweets Analysed</span>
-              <span class="info-box-number">113,866 </span>
+              <span id="total-tweets" class="info-box-number">0</span>
             </div>
             <!-- /.info-box-content -->
           </div>
