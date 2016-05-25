@@ -105,6 +105,7 @@ $(function () {
   }
 
   
+
 var tweetEvent = new EventSource("tweet-stream?search=brexit");  
 tweetEvent.addEventListener('message', listenToMessages);
     
@@ -122,7 +123,6 @@ tweetEvent.addEventListener('message', listenToMessages);
     tweetEvent.addEventListener('message', listenToMessages)
     
   }
-
   //var tweetEvent = new EventSource("tweet-stream?search=brexit");
 
 //   tweetEvent.onmessage = function(e) {
@@ -318,7 +318,11 @@ function scoreBg(emotion) {
   
   h = (emotion + 10) * 5;
   console.log(emotion, "hue:", h, "sat", s);
-  return "hsla(" + h + "," + s + "%,"+ b + "%, 1)";
+  var colour = "hsla(" + h + "," + s + "%,"+ b + "%, 1)";
+  
+  $("#tablecolours").append("<td style='background-color:" + colour +  "'>&nbsp;</td>");
+  
+  return colour
 }
   //-----------------------
   //- MONTHLY SALES CHART -
