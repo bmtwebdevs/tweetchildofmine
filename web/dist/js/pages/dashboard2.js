@@ -23,7 +23,7 @@ $(function () {
    //    //showTweets();
    // });
 
-  var tweetEvent = new EventSource("tweet-stream");
+  var tweetEvent = new EventSource("tweet-stream?search=brexit");
 
   tweetEvent.onmessage = function(e) {
     if(e.data) {
@@ -68,29 +68,40 @@ $(function () {
 
   //     }
 
-function updateLocationTable(location, emotion){
-    var locations = ['manchester','bristol','birmingham','edinburgh','london']
+function updateLocationTable(tweetlocation, emotion){
+    var tweetlocations = ['manchester','bristol','birmingham','edinburgh','london']
+    
+    var existingLocations = $('.location-names').map(function(){
+        return this.innerText;
+      }
+    ).get();
     
     var id;
     
-    for(var i = 0; i < locations.length; i++){
+    for(var i = 0; i < tweetlocations.length; i++){
         var id;
         
-        if(!location){
-          if(emotion >= 0){
+        if(!tweetlocation){
+          if(emotion > 0){
             id = '#unknown-positive-value';
+          }
+          else if (emotion == 0){
+            id = '#unknown-neutral-value';
           }
           else{
             id = '#unknown-negative-value';
           }        
         }
         
-        if(location === locations[i]){
+        if(tweetlocation === tweetlocations[i]){
           if(emotion >= 0){
-            id = '#' + location + '-positive-value';
+            id = '#' + tweetlocation + '-positive-value';
+          }
+          else if (emotion == 0){
+            id = '#' + tweetlocation + '-neutral-value';
           }
           else{
-            id = '#' + location + '-negative-value';
+            id = '#' + tweetlocation + '-negative-value';
           }
         }
     }
