@@ -13,7 +13,7 @@ import Twitter from 'twitter';
 var app = express();
 app.server = http.createServer(app);
 
-var client = new Twitter({
+var client = new Twitter({	
 	consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
 	consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
 	access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
@@ -30,23 +30,42 @@ app.use(express.static(path.normalize(__dirname + './../../web/')));
 
 app.get('/tweet-stream', sse, (req, res) => {
 	
-	var bath = ['51.3758', '-2.3599'];
-	var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
-	var newYork = ['-74,40','-73,41'];
+	// var bath = ['51.3758', '-2.3599'];
+	// var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
+	// var newYork = ['-74,40','-73,41']; 
 	
-	var stream = client.stream('statuses/filter', {track: 'sanFrancisco'});
-  	stream.on('data', function(tweet) {
-		
-		processTweet(tweet, function(processedTweet) {
-			res.sse('data:' + JSON.stringify(processedTweet) + '\n\n');	
-		});
+	console.log(req.query); 
+	
+	var stream = client.stream('statuses/filter', {track: req.query.search });
+        
+	stream.on('data', function(tweet) {		
+		var processedTweet = JSON.stringify(processTweet(tweet));
+		res.sse('data:' + processedTweet + '\n\n');		
+
 	});
  
 	stream.on('error', function(error) {
 		console.log(error);
-		//res.json(error);
 	});				
 	
+});
+
+app.get('/get-tweets-by-location', (req, res) => {
+	
+	var lat = req.query.lat;
+	var lon = req.query.lon;	
+	
+	var processedTweets = [];
+						
+	ts.getTweetsByLocation({ lat: lat, lon: lon }, (tweets) => {	
+		
+		_(tweets.statuses).forEach((tweet) => {		
+			processedTweets.push(processTweet(tweet));			
+		});
+						
+		res.json(processedTweets);	
+	});	                                        			
+		
 });
 
 app.get('/get-tweets', (req, res) => {
@@ -55,7 +74,7 @@ app.get('/get-tweets', (req, res) => {
 	
 	var processedTweets = [];
 						
-	ts.getTweets2(search, (tweets) => {	
+	ts.getTweetsBySearchTerm(search, (tweets) => {	
 		
 		_(tweets.statuses).forEach((tweet) => {		
 			processedTweets.push(processTweet(tweet));			
@@ -74,6 +93,9 @@ function processTweet(tweet, cb) {
 	tweetModel.when = tweet.created_at;
 	tweetModel.text = tweet.text;
 	tweetModel.location = tweet.user.location;
+	
+	tweetModel.geo = tweet.geo;
+	tweetModel.coordinates = tweet.coordinates;
 	
 	// text processing
 	tweetModel.textScore = sentiment(tweet.text).score;
@@ -99,4 +121,3 @@ var port = process.env.PORT || 5000;
 app.listen(port, () => {
    console.log("Listening on " + port);
 });
-
