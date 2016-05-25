@@ -15,10 +15,10 @@ app.server = http.createServer(app);
 
 var test ='';
 var client = new Twitter({
-	consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
-	consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
-	access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
-	access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
+          consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
+          consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
+          access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
+          access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
 });
 
 // routes
@@ -54,9 +54,9 @@ app.get('/tweet-stream', sse, (req, res) => {
 app.get('/get-tweets-by-location', (req, res) => {
 	
 	var lat = req.query.lat;
-	var lon = req.query.lon;	
+	var lon = req.query.lon ;	
 	
-	var processedTweets = [];
+	var processedTweets = []; 
 						
 	ts.getTweetsByLocation({ lat: lat, lon: lon }, (tweets) => {	
 		
