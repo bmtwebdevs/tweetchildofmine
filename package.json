@@ -1,7 +1,7 @@
 {
-  "name": "recognizerator",
+  "name": "Tweet Child of mine",
   "version": "1.0.0",
-  "description": "",
+  "description": "Tweet emotion engine",
   "main": "main.js",
   "scripts": {
     "start": "node server/lib/server.js",
