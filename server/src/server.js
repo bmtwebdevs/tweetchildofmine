@@ -14,17 +14,10 @@ var app = express();
 app.server = http.createServer(app);
 
 var client = new Twitter({
-<<<<<<< HEAD
-	consumer_key: 'N0gsQmkH7fo4o8xsTlKdgGsGg',
-	consumer_secret: 'SiZkybWx3rLFpQTLS6vo58hbWoudbJuPY74Z8sVgSUKRr8Tg42',
-	access_token_key: '7448232-k6YoNE0GOgzKyMTdgqqFlwtxCpVPIwu9KwDYpafrah',
-	access_token_secret: '2dP0QODvSP3QanY7xrcSe0WqsMenjE6p6ClHtndVbliUp'
-=======
-	consumer_key: 'CKMFkWRso9BXQ68NYR8ODjHHG',
-	consumer_secret: 'x04MYu3bpcz3yt63pJZuTfmxbBuWl7kdm79Mbu7Mh1wSi14Pts',
-	access_token_key: '131168610-cDDxo8FtunKk6cyx7ztN7jQYaI8ztMzhMhfea5k',
-	access_token_secret: 'kaHTr5FxRVYToam6YzbazVfq03ZkuvIvKw4swZXM'
->>>>>>> master
+	consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
+	consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
+	access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
+	access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
 });
 
 // routes
@@ -42,18 +35,11 @@ app.get('/tweet-stream', sse, (req, res) => {
 	var newYork = ['-74,40','-73,41'];
 	
 	var stream = client.stream('statuses/filter', {track: 'sanFrancisco'});
-        
-<<<<<<< HEAD
-	stream.on('data', function(tweet) {
+  	stream.on('data', function(tweet) {
 		
 		processTweet(tweet, function(processedTweet) {
 			res.sse('data:' + JSON.stringify(processedTweet) + '\n\n');	
 		});
-=======
-	stream.on('data', function(tweet) {		
-		var processedTweet = JSON.stringify(processTweet(tweet));
-		res.sse('data:' + processedTweet + '\n\n');		
->>>>>>> master
 	});
  
 	stream.on('error', function(error) {
