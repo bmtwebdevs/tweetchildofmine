@@ -22,7 +22,7 @@ $(function () {
       
       var emotionface1 = "";
       if (tweet.faceScore) {
-        emotionface1 = "<b><i>Tweet Picture Emotion Level: </b></i>" + emotionface + "</h5>"
+        emotionface1 = "<b><i>Tweet Picture Emotion Level: </b></i>" + emoticonStyle(emotionface) + "</h5>"
       }
       
       var imagehtml = "";
@@ -30,6 +30,7 @@ $(function () {
         imagehtml = "<img class='media-object'' src='" +tweet.media_url + "' alt='' width='128px' height='128px'>";   
       }
       
+      var bgHsl = scoreBg(emotion);
 
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
       $("#media-body").prepend(
@@ -188,6 +189,23 @@ function showTweets(data) {
         tr.append("</tr>");
         $('#tweettable').append(tr);
     }
+}
+
+
+function emoticonStyle(emotion) {
+  
+  switch(emotion) {
+    case "anger": return "😡";
+    case "contempt":  return "😤";
+    case "disgust":  return "😷";
+    case "fear":  return "🙀";
+    case "happiness":  return "😀";
+    case "sadness":  return "😓";
+    case "surprise":  return "😯";
+    case "neutral": return "😐";  
+    default:
+      return "😐";
+  } 
 }
 
   //-----------------------
