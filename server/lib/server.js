@@ -51,10 +51,10 @@ var app = (0, _express2.default)();
 app.server = _http2.default.createServer(app);
 
 var client = new _twitter2.default({
-	consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
-	consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
-	access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
-	access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
+	consumer_key: 'N0gsQmkH7fo4o8xsTlKdgGsGg',
+	consumer_secret: 'SiZkybWx3rLFpQTLS6vo58hbWoudbJuPY74Z8sVgSUKRr8Tg42',
+	access_token_key: '7448232-k6YoNE0GOgzKyMTdgqqFlwtxCpVPIwu9KwDYpafrah',
+	access_token_secret: '2dP0QODvSP3QanY7xrcSe0WqsMenjE6p6ClHtndVbliUp'
 });
 
 // routes
@@ -79,8 +79,9 @@ app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 
 	stream.on('data', function (tweet) {
 
-		var processedTweet = JSON.stringify(processTweet(tweet));
-		res.sse('data:' + processedTweet + '\n\n');
+		processTweet(tweet, function (processedTweet) {
+			res.sse('data:' + JSON.stringify(processedTweet) + '\n\n');
+		});
 	});
 
 	stream.on('error', function (error) {
@@ -108,13 +109,14 @@ app.get('/get-tweets', _serverSentEvents2.default, function (req, res) {
 	// });				
 });
 
-function processTweet(tweet) {
+function processTweet(tweet, cb) {
 
 	//console.log(tweet);	
 	var tweetModel = {};
-
+	tweetModel.userName = tweet.user.name;
 	tweetModel.when = tweet.created_at;
 	tweetModel.text = tweet.text;
+	tweetModel.location = tweet.user.location;
 
 	// text processing
 	tweetModel.textScore = (0, _sentiment2.default)(tweet.text).score;
@@ -122,14 +124,15 @@ function processTweet(tweet) {
 	// face processing		
 	if (tweet.entities.media && tweet.entities.media[0].url) {
 		tweetModel.url = tweet.entities.media[0].url;
-		return face.analyseMyFaceFromUrl(tweet.entities.media[0].url, function (result) {
-			//console.log(result.statusText, result.emotion);
+		tweetModel.media_url = tweet.entities.media[0].media_url;
+		face.analyseMyFaceFromUrl(tweet.entities.media[0].media_url, function (result) {
+			console.log(result.statusText, result.emotion);
 
 			tweetModel.faceScore = result.emotion;
-			return tweetModel;
+			cb(tweetModel);
 		});
 	} else {
-		return tweetModel;
+		cb(tweetModel);
 	}
 }
 
