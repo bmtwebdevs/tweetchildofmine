@@ -45,17 +45,10 @@ app.get('/tweet-stream', sse, (req, res) => {
 	
 	var stream = client.stream('statuses/filter', {track: req.query.search });
         
-<<<<<<< HEAD
-	stream.on('data', function(tweet) {
-		
-		processTweet(tweet, function(processedTweet) {
-			res.sse('data:' + JSON.stringify(processedTweet) + '\n\n');	
-		});
-=======
 	stream.on('data', function(tweet) {		
 		var processedTweet = JSON.stringify(processTweet(tweet));
 		res.sse('data:' + processedTweet + '\n\n');		
->>>>>>> master
+
 	});
  
 	stream.on('error', function(error) {
