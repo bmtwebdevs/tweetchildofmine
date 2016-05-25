@@ -94,7 +94,7 @@ tweetEvent.addEventListener('message', listenToMessages);
 //   } 
 
 function updateLocationTable(tweetlocation, emotion){
-       
+   
     var id;  
 
     if(!tweetlocation){
@@ -110,23 +110,24 @@ function updateLocationTable(tweetlocation, emotion){
     }
 
     else {
-      
+      tweetlocation = tweetlocation.trim();
+       
       var inLocation = isInLocationList(tweetlocation);
       
       if(inLocation){
         if(emotion >= 0){
-          id = '#' + inLocation.replace(' ','-') + '-positive-value';  
+          id = '#' + replaceIllegalCharacters(inLocation) + '-positive-value';  
         }
         else if (emotion == 0){
-          id = '#' + inLocation.replace(' ','-') + '-neutral-value';
+          id = '#' + replaceIllegalCharacters(inLocation) + '-neutral-value';
         }
         else{
-          id = '#' + inLocation.replace(' ','-') + '-negative-value';
+          id = '#' + replaceIllegalCharacters(inLocation) + '-negative-value';
         }
       } 
       else{
         
-        var tweetlocationnospaces = tweetlocation.replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','').replace('@','at');
+        var tweetlocationnospaces = replaceIllegalCharacters(tweetlocation);
         
         var tr = $('<tr>');
         tr.append('<td class="location-names">' + tweetlocation + '</td>');
@@ -173,18 +174,24 @@ function isInLocationList(tweetlocation){
       }
     ).get();
     
-    var tweetlocationwithcharacterfilter = tweetlocation.replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','').replace('@','at');
+    var tweetlocationwithcharacterfilter = replaceIllegalCharacters(tweetlocation);
     
     for(var i = 0; i < existingLocations.length; i++){
         var id;
               
-        var existinglocationwithcharacterfilter = existingLocations[i].replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','').replace('@','at');
+        var existinglocationwithcharacterfilter = replaceIllegalCharacters(existingLocations[i]);
               
-        if(tweetlocation && tweetlocation.indexOf(existinglocationwithcharacterfilter) > -1){
+        if(tweetlocation && tweetlocationwithcharacterfilter.indexOf(existinglocationwithcharacterfilter) > -1){
           return existinglocationwithcharacterfilter;
         }        
     }    
     return false;
+}
+
+function replaceIllegalCharacters(text){
+    return text.replace(/ /g,'-').replace(/\'/g,'-').replace(/\!/g,'').replace(/\,/g,'').replace(/\//g,'')
+      .replace(/\\/g,'').replace(/\@/g,'at').replace(/\./g,'').replace(/\&/g,'and').replace(/\#/g,'').replace(/\?/,'')
+      .replace(/\(/g, '').replace(/\)/g,'');
 }
 
 // function showTweets(data) {
