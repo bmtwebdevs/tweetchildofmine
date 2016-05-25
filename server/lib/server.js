@@ -51,10 +51,10 @@ var app = (0, _express2.default)();
 app.server = _http2.default.createServer(app);
 
 var client = new _twitter2.default({
-	consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
-	consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
-	access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
-	access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
+	consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
+	consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
+	access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
+	access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
 });
 
 // routes
@@ -66,11 +66,11 @@ app.get('/', function (req, res) {
 app.use(_express2.default.static(_path2.default.normalize(__dirname + './../../web/')));
 
 // app.get('/get-tweets-mock', (req, res) => {
-// 	
-// 	var analyser = new TextAnalyser();		
-// 	
+//
+// 	var analyser = new TextAnalyser();
+//
 // 	res.json(analyser.processTweets());
-// 	
+//
 // });
 //
 app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
@@ -80,6 +80,7 @@ app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 	stream.on('data', function (tweet) {
 
 		var processedTweet = JSON.stringify(processTweet(tweet));
+		console.log(tweet, processedTweet);
 		res.sse('data:' + processedTweet + '\n\n');
 	});
 
@@ -101,16 +102,16 @@ app.get('/get-tweets', _serverSentEvents2.default, function (req, res) {
 	};
 
 	// this.client.get(this.querystring, params, (error, tweets, response) => {
-	// 	_(tweets.statuses).forEach((tweet) => {		
+	// 	_(tweets.statuses).forEach((tweet) => {
 	// 		var processedTweet = JSON.stringify(processTweet(tweet));
-	// 		res.sse('data: ' + processedTweet + '\n\n');			
+	// 		res.sse('data: ' + processedTweet + '\n\n');
 	// 	});
-	// });				
+	// });
 });
 
 function processTweet(tweet) {
 
-	//console.log(tweet);	
+	//console.log(tweet);
 	var tweetModel = {};
 
 	tweetModel.when = tweet.created_at;
@@ -119,7 +120,7 @@ function processTweet(tweet) {
 	// text processing
 	tweetModel.textScore = (0, _sentiment2.default)(tweet.text).score;
 
-	// face processing		
+	// face processing
 	if (tweet.entities.media && tweet.entities.media[0].url) {
 		tweetModel.url = tweet.entities.media[0].url;
 		return face.analyseMyFaceFromUrl(tweet.entities.media[0].url, function (result) {

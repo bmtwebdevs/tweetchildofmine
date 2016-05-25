@@ -7,15 +7,18 @@ $(function () {
    * Here we will create a few charts using ChartJS
    */
 
-   $.ajax({
-     url: '/get-tweets',
-     dataType: 'json',
-     success: function(data) {
-       //data.then((result) => {
-         console.log(data);
-       //})
-       showTweets(data);
-     }
+   $('#search-btn').on('click', function(){
+    //    $.ajax({
+    //      url: '/get-tweets',
+    //      dataType: 'json',
+    //      success: function(data) {
+    //        //data.then((result) => {
+    //          console.log(data);
+    //        //})
+    //        showTweets(data);
+    //      }
+    //    });
+    showTweets();
    });
 
   var tweetEvent = new EventSource("tweet-stream");
@@ -55,7 +58,7 @@ $(function () {
 
 
 
-function showTweets(data) {
+function showTweets() {
 
     var json = [
         {
@@ -70,7 +73,6 @@ function showTweets(data) {
         }
     ];
     //TODO need to get json and work out format, then process data into correct format
-    //var html =
     var tr;
     for (var i = 0; i < json.length; i++) {
         tr = $('<tr>');
@@ -78,7 +80,7 @@ function showTweets(data) {
         tr.append("<td>" + json[i].positive + "</td>");
         tr.append("<td>" + json[i].negative + "</td>");
         tr.append("</tr>");
-        $('tweetTable').append(tr);
+        $('#tweetTable').append(tr);
     }
 }
 
