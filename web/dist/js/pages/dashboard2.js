@@ -22,7 +22,7 @@ $(function () {
       
       var emotionface1 = "";
       if (tweet.faceScore) {
-        emotionface1 = "<b><i>Tweet Picture Emotion Level: </b></i>" + emoticonStyle(emotionface) + "</h5>"
+        emotionface1 = "<b><i>Tweet Picture Emotion Level: </b></i><h1>" + emoticonStyle(emotionface) + "</h1></h5>"
       }
       
       var imagehtml = "";
@@ -30,10 +30,11 @@ $(function () {
         imagehtml = "<img class='media-object'' src='" +tweet.media_url + "' alt='' width='128px' height='128px'>";   
       }
       
-      var bgHsl = scoreBg(emotion);
+      var bgHsl = scoreBg(parseInt(emotion, 10));
 
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
       $("#media-body").prepend(
+        "<div class='tweet-panel' style='background-color:" + bgHsl + "'>" +
         "<h4><b>" + tweet.text + 
         "</b></h4><h5><b><i>Tweet Date & Time: </b></i>" + tweet.when + 
         "</h5><h5><b><i>User: </b></i>" + tweet.userName +
@@ -209,7 +210,11 @@ function emoticonStyle(emotion) {
 }
 
 function scoreBg(emotion) {
+  var h = 0, s = 100, b = 50;
   
+  h = (emotion + 10) * 5;
+  console.log(emotion, "hue:", h, "sat", s);
+  return "hsla(" + h + "," + s + "%,"+ b + "%, 1)";
 }
   //-----------------------
   //- MONTHLY SALES CHART -
