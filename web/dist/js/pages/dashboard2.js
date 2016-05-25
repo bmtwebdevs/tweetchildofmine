@@ -23,7 +23,8 @@ $(function () {
    //    //showTweets();
    // });
 
-  var tweetEvent = new EventSource("tweet-stream?search=bristol");
+
+  var tweetEvent = new EventSource("tweet-stream?search=brexit");
 
   tweetEvent.onmessage = function(e) {
     if(e.data) {
@@ -69,30 +70,45 @@ $(function () {
 
   //     }
 
-function updateLocationTable(location, emotion){
-    var locations = ['manchester','bristol','birmingham','edinburgh','london']
+function updateLocationTable(tweetlocation, emotion){
+    
+    var existingLocations = $('.location-names').map(function(){
+        return this.innerText;
+      }
+    ).get();
     
     var id;
     
-    for(var i = 0; i < locations.length; i++){
+    for(var i = 0; i < tweetlocations.length; i++){
         var id;
-        
-        if(!location){
+              
+        if(tweetlocation && tweetlocation.indexOf(tweetlocations[i]) > -1){
           if(emotion >= 0){
+            id = '#' + tweetlocation + '-positive-value';
+            break;
+          }
+          else if (emotion == 0){
+            id = '#' + tweetlocation + '-neutral-value';
+            break;
+          }
+          else{
+            id = '#' + tweetlocation + '-negative-value';
+            break;
+          }
+        }
+        else {
+          if(emotion > 0){
             id = '#unknown-positive-value';
+            break;
+          }
+          else if (emotion == 0){
+            id = '#unknown-neutral-value';
+            break;
           }
           else{
             id = '#unknown-negative-value';
+            break;
           }        
-        }
-        
-        if(location === locations[i]){
-          if(emotion >= 0){
-            id = '#' + location + '-positive-value';
-          }
-          else{
-            id = '#' + location + '-negative-value';
-          }
         }
     }
     
@@ -112,6 +128,18 @@ function updateLocationTable(location, emotion){
     // });
 }
 
+function isInLocationList(tweetlocation){
+    var tweetlocations = ['Manchester','Bristol','Birmingham','Edinburgh','London']
+    
+    for(var i = 0; i < tweetlocations.length; i++){
+        var id;
+              
+        if(tweetlocation && tweetlocation.indexOf(tweetlocations[i]) > -1){
+          return true;
+        }        
+    }    
+    return false;
+}
 
 function showTweets(data) {
 
