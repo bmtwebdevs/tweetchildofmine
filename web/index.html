@@ -26,14 +26,24 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-<style>
+<style type="text/css">
 
-div.media-left {
+  div.media-left {
+    width: 100%;  
+  }
   
-  width: 100%;  
+  .positive-tweet{
+    color:green;
+  }
   
+  .negative-tweet{
+    color:red;
+  }
   
-}
+
+  .neutral-tweet{
+    color:blue;
+  }
 
 .tweet-panel {
   padding: 10px;
@@ -231,7 +241,7 @@ div.media-left {
                     <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                   </div>
                 </div>
-                <div class="box-body">
+                <div class="box-body" style="overflow-y:scroll; max-height:600px;">
                   <table id="tweettable">
                       <tr>
                           <th class="col-md-3 col-sm-6 col-xs-12">Location</th>
