@@ -5,6 +5,60 @@ $(function () {
   
   $('#search-btn').click(function(e) {   
       
+      $('#total-tweets').text('0');
+      $('#positive-overall').text('0');
+      $('#percent-happy').text('0');
+      $('#negative-overall').text('0');
+      $('#neutral-overall').text('0');
+      
+      $('tweettable').innerHtml(
+        
+        '<tr>'+
+          '<th class="col-md-3 col-sm-6 col-xs-12">Location</th>'+
+              '<th class="col-md-3 col-sm-6 col-xs-12">Happy/Positive Tweets</th>'+
+              '<th class="col-md-3 col-sm-6 col-xs-12">Angry/Negative Tweets</th>'+
+              '<th class="col-md-3 col-sm-6 col-xs-12">Neutral Tweets</th>'+
+          '</tr>'+
+          '<tr>'+
+              '<td class="location-names">Manchester</td>'+
+              '<td id="manchester-positive-value" class="positive-tweet">0</td>'+
+              '<td id="manchester-negative-value" class="negative-tweet">0</td>'+
+              '<td id="manchester-neutral-value" class="neutral-tweet">0</td>'+
+          '</tr>'+
+          '<tr>'+
+              '<td class="location-names">Bristol</td>'+
+              '<td id="bristol-positive-value" class="positive-tweet">0</td>'+
+              '<td id="bristol-negative-value" class="negative-tweet">0</td>'+
+              '<td id="bristol-neutral-value" class="neutral-tweet">0</td>'+
+          '</tr>'+
+          '<tr>'+
+              '<td class="location-names">Birmingham</td>'+
+              '<td id="birmingham-positive-value" class="positive-tweet">0</td>'+
+              '<td id="birmingham-negative-value" class="negative-tweet">0</td>'+
+              '<td id="birmingham-neutral-value" class="neutral-tweet">0</td>'+
+          '</tr>'+
+          '<tr>'+
+              '<td class="location-names">Edinburgh</td>'+
+              '<td id="edinburgh-positive-value" class="positive-tweet">0</td>'+
+              '<td id="edinburgh-negative-value" class="negative-tweet">0</td>'+
+              '<td id="edinburgh-neutral-value" class="neutral-tweet">0</td>'+
+          '</tr>'+
+          '<tr>'+
+              '<td class="location-names">London</td>'+
+              '<td id="london-positive-value" class="positive-tweet">0</td>'+
+              '<td id="london-negative-value" class="negative-tweet">0</td>'+
+              '<td id="london-neutral-value" class="neutral-tweet">0</td>'+
+          '</tr>'+
+          '<tr>'+
+              '<td>Unknown</td>'+
+              '<td id="unknown-positive-value" class="positive-tweet">0</td>'+
+              '<td id="unknown-negative-value" class="negative-tweet">0</td>'+
+              '<td id="unknown-neutral-value" class="neutral-tweet">0</td>'+
+          '</tr>'
+        
+      );
+      
+      
       e.preventDefault();                       
       var term = $('#searchTerm').val();           
       newSearch(term);
@@ -138,7 +192,7 @@ function updateLocationTable(tweetlocation, emotion){
         tr.append('</tr>');
         $('#tweettable').append(tr);
         
-        if(emotion >= 0){
+        if(emotion > 0){
           id = '#' + tweetlocationnospaces + '-positive-value';  
         }
         else if (emotion == 0){
@@ -155,7 +209,28 @@ function updateLocationTable(tweetlocation, emotion){
     var value = parseInt($(id).text()) + 1;
     $(id).text(value.toString());
     
+    if(emotion > 0){
+      var value = parseInt($('#positive-overall').text()) + 1;
+      $('#positive-overall').text(value.toString());
+    }
+    else if (emotion == 0){
+      var value = parseInt($('#neutral-overall').text()) + 1;
+      $('#neutral-overall').text(value.toString());
+    }
+    
+    else {
+      var value = parseInt($('#negative-overall').text()) + 1;
+      $('#negative-overall').text(value.toString());
+    }
+    
+    var value = parseInt($('#total-tweets').text()) + 1;
+    $('#total-tweets').text(value.toString());
 
+    var numberofpositive = parseInt($('#positive-overall').text());
+    var totalnumberoftweets = parseInt($('#total-tweets').text());
+    var percenthappy = (numberofpositive / totalnumberoftweets) * 100;
+    $('#percent-happy').text(percenthappy.toFixed(2).toString());
+    
     // $.ajax({
     //   url: '/get-tweets?search=manchester',
     //   dataType: 'json',
