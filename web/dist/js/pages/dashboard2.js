@@ -49,7 +49,9 @@ $(function () {
     }
   
   }
+
   
+<<<<<<< HEAD
   var tweetEvent = new EventSource("tweet-stream?search=selfie");  
   tweetEvent.addEventListener('message', listenToMessages);
      
@@ -67,6 +69,25 @@ $(function () {
      tweetEvent.addEventListener('message', listenToMessages)
      
    }
+=======
+var tweetEvent = new EventSource("tweet-stream?search=brexit");  
+tweetEvent.addEventListener('message', listenToMessages);
+    
+  // 
+  function newSearch(param) {     
+    
+    tweetEvent.close();     
+    
+    tweetEvent.removeEventListener('message', listenToMessages);
+    
+    tweetEvent = null;
+    
+    tweetEvent = new EventSource("tweet-stream?search=" + param);
+    
+    tweetEvent.addEventListener('message', listenToMessages)
+    
+  }
+>>>>>>> master
 
   //var tweetEvent = new EventSource("tweet-stream?search=brexit");
 
@@ -93,49 +114,63 @@ $(function () {
 //     }
 //   } 
 
-var tweetlocations = ['Manchester','Bristol','Birmingham','Edinburgh','London'];
-
 function updateLocationTable(tweetlocation, emotion){
-    
-    var existingLocations = $('.location-names').map(function(){
-        return this.innerText;
+   
+    var id;  
+
+    if(!tweetlocation){
+        if(emotion > 0){
+        id = '#unknown-positive-value';
       }
-    ).get();
-    
-    var id;
-    
-    for(var i = 0; i < tweetlocations.length; i++){
-        var id;
-              
-        if(tweetlocation && tweetlocation.indexOf(tweetlocations[i]) > -1){
-          if(emotion >= 0){
-            id = '#' + tweetlocation + '-positive-value';
-            break;
-          }
-          else if (emotion == 0){
-            id = '#' + tweetlocation + '-neutral-value';
-            break;
-          }
-          else{
-            id = '#' + tweetlocation + '-negative-value';
-            break;
-          }
-        }
-        else {
-          if(emotion > 0){
-            id = '#unknown-positive-value';
-            break;
-          }
-          else if (emotion == 0){
-            id = '#unknown-neutral-value';
-            break;
-          }
-          else{
-            id = '#unknown-negative-value';
-            break;
-          }        
-        }
+      else if (emotion == 0){
+        id = '#unknown-neutral-value';
+      }
+      else{
+        id = '#unknown-negative-value';
+      }        
     }
+
+    else {
+      tweetlocation = tweetlocation.trim();
+       
+      var inLocation = isInLocationList(tweetlocation);
+      
+      if(inLocation){
+        if(emotion >= 0){
+          id = '#' + replaceIllegalCharacters(inLocation) + '-positive-value';  
+        }
+        else if (emotion == 0){
+          id = '#' + replaceIllegalCharacters(inLocation) + '-neutral-value';
+        }
+        else{
+          id = '#' + replaceIllegalCharacters(inLocation) + '-negative-value';
+        }
+      } 
+      else{
+        
+        var tweetlocationnospaces = replaceIllegalCharacters(tweetlocation);
+        
+        var tr = $('<tr>');
+        tr.append('<td class="location-names">' + tweetlocation + '</td>');
+        tr.append('<td id="' + tweetlocationnospaces +'-positive-value" class="positive-tweet">' + '0' + '</td>');
+        tr.append('<td id="' + tweetlocationnospaces + '-negative-value" class="negative-tweet">' + '0' + '</td>');
+        tr.append('<td id="' + tweetlocationnospaces +'-neutral-value" class="neutral-tweet">' + '0' + '</td>');
+        tr.append('</tr>');
+        $('#tweettable').append(tr);
+        
+        if(emotion >= 0){
+          id = '#' + tweetlocationnospaces + '-positive-value';  
+        }
+        else if (emotion == 0){
+          id = '#' + tweetlocationnospaces + '-neutral-value';
+        }
+        else{
+          id = '#' + tweetlocationnospaces + '-negative-value';
+        }
+      }
+      
+    }
+    
     
     var value = parseInt($(id).text()) + 1;
     $(id).text(value.toString());
@@ -155,42 +190,56 @@ function updateLocationTable(tweetlocation, emotion){
 
 function isInLocationList(tweetlocation){
     
+    var existingLocations = $('.location-names').map(function(){
+        return this.innerText;
+      }
+    ).get();
     
-    for(var i = 0; i < tweetlocations.length; i++){
+    var tweetlocationwithcharacterfilter = replaceIllegalCharacters(tweetlocation);
+    
+    for(var i = 0; i < existingLocations.length; i++){
         var id;
               
-        if(tweetlocation && tweetlocation.indexOf(tweetlocations[i]) > -1){
-          return true;
+        var existinglocationwithcharacterfilter = replaceIllegalCharacters(existingLocations[i]);
+              
+        if(tweetlocation && tweetlocationwithcharacterfilter.indexOf(existinglocationwithcharacterfilter) > -1){
+          return existinglocationwithcharacterfilter;
         }        
     }    
     return false;
 }
 
-function showTweets(data) {
-
-    var json = [
-        {
-            location: 'manchester',
-            positive: '4',
-            negative: '10'
-        },
-        {
-            location: 'bristol',
-            positive: '18',
-            negative: '25'
-        }
-    ];
-    //TODO need to get json and work out format, then process data into correct format
-    var tr;
-    for (var i = 0; i < json.length; i++) {
-        tr = $('<tr>');
-        tr.append("<td>" + json[i].location + "</td>");
-        tr.append("<td>" + json[i].positive + "</td>");
-        tr.append("<td>" + json[i].negative + "</td>");
-        tr.append("</tr>");
-        $('#tweettable').append(tr);
-    }
+function replaceIllegalCharacters(text){
+    return text.replace(/ /g,'-').replace(/\'/g,'-').replace(/\!/g,'').replace(/\,/g,'').replace(/\//g,'')
+      .replace(/\\/g,'').replace(/\@/g,'at').replace(/\./g,'').replace(/\&/g,'and').replace(/\#/g,'').replace(/\?/,'')
+      .replace(/\(/g, '').replace(/\)/g,'');
 }
+
+// function showTweets(data) {
+
+//     var json = [
+//         {
+//             location: 'manchester',
+//             positive: '4',
+//             negative: '10'
+//         },
+//         {
+//             location: 'bristol',
+//             positive: '18',
+//             negative: '25'
+//         }
+//     ];
+//     //TODO need to get json and work out format, then process data into correct format
+//     var tr;
+//     for (var i = 0; i < json.length; i++) {
+//         tr = $('<tr>');
+//         tr.append("<td>" + json[i].location + "</td>");
+//         tr.append("<td>" + json[i].positive + "</td>");
+//         tr.append("<td>" + json[i].negative + "</td>");
+//         tr.append("</tr>");
+//         $('#tweettable').append(tr);
+//     }
+// }
 
 
 function emoticonStyle(emotion) {
