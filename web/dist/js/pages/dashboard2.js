@@ -11,11 +11,14 @@ $(function () {
   tweetEvent.onmessage = function(e) {
     if(e.data) {
       var tweet = JSON.parse(e.data);
+      var emotion = (tweet.faceEmotion) ? tweet.faceEmotion + " " + tweet.textScore : tweet.textScore;
+      
+      
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
-      $("#table-tweets > tbody").prepend("<tr><td>" + tweet.when + 
+      $("#table-tweets > tbody").prepend("<tr><td>" + tweet.userName + " " + tweet.location + " " + tweet.when + 
         "</td><td>" + tweet.text + 
         "</td><td>Bristol</td><td>" +
-        "<div class='sparkbar' data-color='#00c0ef' data-height='20'>90,80,-90,70,-61,83,63</div>" +
+        "<div class='sparkbar' data-color='#00c0ef' data-height='20'>" +  emotion + "</div>" +
         "</td></tr>");
     }
   }

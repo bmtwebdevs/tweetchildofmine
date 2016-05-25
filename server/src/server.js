@@ -14,10 +14,17 @@ var app = express();
 app.server = http.createServer(app);
 
 var client = new Twitter({
+<<<<<<< HEAD
+	consumer_key: 'N0gsQmkH7fo4o8xsTlKdgGsGg',
+	consumer_secret: 'SiZkybWx3rLFpQTLS6vo58hbWoudbJuPY74Z8sVgSUKRr8Tg42',
+	access_token_key: '7448232-k6YoNE0GOgzKyMTdgqqFlwtxCpVPIwu9KwDYpafrah',
+	access_token_secret: '2dP0QODvSP3QanY7xrcSe0WqsMenjE6p6ClHtndVbliUp'
+=======
 	consumer_key: 'CKMFkWRso9BXQ68NYR8ODjHHG',
 	consumer_secret: 'x04MYu3bpcz3yt63pJZuTfmxbBuWl7kdm79Mbu7Mh1wSi14Pts',
 	access_token_key: '131168610-cDDxo8FtunKk6cyx7ztN7jQYaI8ztMzhMhfea5k',
 	access_token_secret: 'kaHTr5FxRVYToam6YzbazVfq03ZkuvIvKw4swZXM'
+>>>>>>> master
 });
 
 // routes
@@ -36,9 +43,17 @@ app.get('/tweet-stream', sse, (req, res) => {
 	
 	var stream = client.stream('statuses/filter', {track: 'sanFrancisco'});
         
+<<<<<<< HEAD
+	stream.on('data', function(tweet) {
+		
+		processTweet(tweet, function(processedTweet) {
+			res.sse('data:' + JSON.stringify(processedTweet) + '\n\n');	
+		});
+=======
 	stream.on('data', function(tweet) {		
 		var processedTweet = JSON.stringify(processTweet(tweet));
 		res.sse('data:' + processedTweet + '\n\n');		
+>>>>>>> master
 	});
  
 	stream.on('error', function(error) {
@@ -65,29 +80,30 @@ app.get('/get-tweets', (req, res) => {
 		
 });
 
-
-function processTweet(tweet) {
+function processTweet(tweet, cb) {
 	
 	//console.log(tweet);	
 	var tweetModel = {};
-	
+	tweetModel.userName = tweet.user.name;
 	tweetModel.when = tweet.created_at;
 	tweetModel.text = tweet.text;
+	tweetModel.location = tweet.user.location;
 	
 	// text processing
 	tweetModel.textScore = sentiment(tweet.text).score;
 	
 	// face processing		
-	if(tweet.entities.media && tweet.entities.media[0].url) {		
+	if(tweet.entities.media && tweet.entities.media[0].url) {
 		tweetModel.url = tweet.entities.media[0].url;
-		return face.analyseMyFaceFromUrl(tweet.entities.media[0].url, function(result) {    	
-			//console.log(result.statusText, result.emotion);
+		tweetModel.media_url = tweet.entities.media[0].media_url
+		face.analyseMyFaceFromUrl(tweet.entities.media[0].media_url, function(result) {    	
+			console.log(result.statusText, result.emotion);
 			
 			tweetModel.faceScore = result.emotion;
-			return tweetModel;
+			cb(tweetModel);
 		});
 	} else {	
-		return tweetModel;
+		cb(tweetModel);
 	}		
 }
 
