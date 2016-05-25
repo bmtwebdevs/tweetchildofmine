@@ -33,16 +33,20 @@ $(function () {
       
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
 
-      $("#table-tweets > tbody").prepend("<tr><td>" + tweet.userName + " " + tweet.location + " " + tweet.when + 
-        "</td><td>" + tweet.text + 
-        "</td><td>Bristol</td><td>" +
-        "<div class='sparkbar' data-color='#00c0ef' data-height='20'>" +  emotion + "</div>" +
-        "</td></tr>");
+      $("#media-body").prepend(
+        "<class='media-left'><img class='media-object'' src='" +tweet.picture +
+        "' alt='Img'>" +
+        "</div>" +
+        "<h4>" + tweet.text + 
+        "</h4><h5>" + tweet.when + 
+        "</h5><h6>" + tweet.who +
+        "</h6>" +
+        "</div>");
         
-      updateLocationTable(tweet.location, emotion);
+       updateLocationTable(tweet.location, emotion);
     }
-  }
-
+  } 
+                                   
   // var locations = [
   //     { latitude: 53.483959, longitude: -2.244644},
   //     { latitude: 51.4545, longitude: 2.5879 },
