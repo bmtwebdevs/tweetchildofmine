@@ -8,7 +8,7 @@ var tweets = [];
 TextAnalyser.prototype.parseFile = function(file) { 
     fs.createReadStream(file)
         .pipe(parse({delimiter: ','})
-        .on('data', (csvrow) => {
+        .on('data', function(csvrow) {
             
             var tweetText = csvrow[5];
             
@@ -22,7 +22,7 @@ TextAnalyser.prototype.parseFile = function(file) {
             tweets.push(scoreTweet);
                 
         })	
-        .on('end', () => {
+        .on('end', function() {
             this.sortTweets();
             console.log("AVERAGE: " + this.averageTweets());
         })						
@@ -38,7 +38,7 @@ TextAnalyser.prototype.averageTweets = function() {
     
     var count = tweets.length;
     
-    var scores = _(tweets).map((tweet) => {
+    var scores = _(tweets).map(function(tweet) {
         return tweet.score
     });
     

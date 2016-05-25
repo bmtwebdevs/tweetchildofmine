@@ -6,6 +6,35 @@ $(function () {
    * -------
    * Here we will create a few charts using ChartJS
    */
+                                   
+        var locations = [
+            { latitude: 53.483959, longitude: -2.244644},
+            { latitude: 51.4545, longitude: 2.5879 },
+            { latitude: 52.4862, longitude: 1.8904 }
+            ];
+            
+            for (var index = 0; index < locations.length; index++) {
+                var element = locations[index];
+                
+                  $.ajax({
+                    url: '/get-tweets',
+                    data: element,
+                    dataType: 'json',
+                    success: function(data) {
+                      console.log(data);                      
+                      showTweets(data);
+                    }
+                });
+                
+            }      
+
+function showTweets() {
+  
+  //var html = 
+  
+  $('tweetTable').html();
+  
+}
 
   //-----------------------
   //- MONTHLY SALES CHART -
