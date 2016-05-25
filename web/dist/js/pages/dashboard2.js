@@ -23,6 +23,7 @@ $(function () {
    //    //showTweets();
    // });
 
+
   var tweetEvent = new EventSource("tweet-stream?search=brexit");
 
   tweetEvent.onmessage = function(e) {
@@ -34,13 +35,14 @@ $(function () {
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
 
       $("#media-body").prepend(
-        "<class='media-left'><img class='media-object'' src='" +tweet.picture +
-        "' alt='Img'>" +
+        "<img class='media-object'' src='" +tweet.media_url +
+        "' alt=''>" +
         "</div>" +
-        "<h4>" + tweet.text + 
-        "</h4><h5>" + tweet.when + 
-        "</h5><h6>" + tweet.who +
-        "</h6>" +
+        "<h4><b>" + tweet.text + 
+        "</b></h4><h5>" + tweet.when + 
+        "</h5><h6>" + tweet.userName +
+        "</h6><h7>" + emotion +
+        "</h7>"+
         "</div>");
         
        updateLocationTable(tweet.location, emotion);
@@ -69,7 +71,6 @@ $(function () {
   //     }
 
 function updateLocationTable(tweetlocation, emotion){
-    var tweetlocations = ['manchester','bristol','birmingham','edinburgh','london']
     
     var existingLocations = $('.location-names').map(function(){
         return this.innerText;
@@ -80,29 +81,34 @@ function updateLocationTable(tweetlocation, emotion){
     
     for(var i = 0; i < tweetlocations.length; i++){
         var id;
-        
-        if(!tweetlocation){
-          if(emotion > 0){
-            id = '#unknown-positive-value';
-          }
-          else if (emotion == 0){
-            id = '#unknown-neutral-value';
-          }
-          else{
-            id = '#unknown-negative-value';
-          }        
-        }
-        
-        if(tweetlocation === tweetlocations[i]){
+              
+        if(tweetlocation && tweetlocation.indexOf(tweetlocations[i]) > -1){
           if(emotion >= 0){
             id = '#' + tweetlocation + '-positive-value';
+            break;
           }
           else if (emotion == 0){
             id = '#' + tweetlocation + '-neutral-value';
+            break;
           }
           else{
             id = '#' + tweetlocation + '-negative-value';
+            break;
           }
+        }
+        else {
+          if(emotion > 0){
+            id = '#unknown-positive-value';
+            break;
+          }
+          else if (emotion == 0){
+            id = '#unknown-neutral-value';
+            break;
+          }
+          else{
+            id = '#unknown-negative-value';
+            break;
+          }        
         }
     }
     
@@ -122,6 +128,18 @@ function updateLocationTable(tweetlocation, emotion){
     // });
 }
 
+function isInLocationList(tweetlocation){
+    var tweetlocations = ['Manchester','Bristol','Birmingham','Edinburgh','London']
+    
+    for(var i = 0; i < tweetlocations.length; i++){
+        var id;
+              
+        if(tweetlocation && tweetlocation.indexOf(tweetlocations[i]) > -1){
+          return true;
+        }        
+    }    
+    return false;
+}
 
 function showTweets(data) {
 
