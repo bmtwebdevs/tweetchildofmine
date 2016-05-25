@@ -51,10 +51,10 @@ var app = (0, _express2.default)();
 app.server = _http2.default.createServer(app);
 
 var client = new _twitter2.default({
-	consumer_key: 'N0gsQmkH7fo4o8xsTlKdgGsGg',
-	consumer_secret: 'SiZkybWx3rLFpQTLS6vo58hbWoudbJuPY74Z8sVgSUKRr8Tg42',
-	access_token_key: '7448232-k6YoNE0GOgzKyMTdgqqFlwtxCpVPIwu9KwDYpafrah',
-	access_token_secret: '2dP0QODvSP3QanY7xrcSe0WqsMenjE6p6ClHtndVbliUp'
+	consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
+	consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
+	access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
+	access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
 });
 
 // routes
@@ -65,17 +65,8 @@ app.get('/', function (req, res) {
 
 app.use(_express2.default.static(_path2.default.normalize(__dirname + './../../web/')));
 
-// app.get('/get-tweets-mock', (req, res) => {
-// 	
-// 	var analyser = new TextAnalyser();		
-// 	
-// 	res.json(analyser.processTweets());
-// 	
-// });
-//
 app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 
-<<<<<<< HEAD
 	// var bath = ['51.3758', '-2.3599'];
 	// var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
 	// var newYork = ['-74,40','-73,41'];
@@ -83,23 +74,17 @@ app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 	console.log(req.query);
 
 	var stream = client.stream('statuses/filter', { track: req.query.search });
-=======
-	var stream = client.stream('statuses/filter', { track: 'bristol' });
->>>>>>> refs/remotes/origin/master
 
 	stream.on('data', function (tweet) {
-
-		processTweet(tweet, function (processedTweet) {
-			res.sse('data:' + JSON.stringify(processedTweet) + '\n\n');
-		});
+		var processedTweet = JSON.stringify(processTweet(tweet));
+		res.sse('data:' + processedTweet + '\n\n');
 	});
 
 	stream.on('error', function (error) {
-		throw error;
+		console.log(error);
 	});
 });
 
-<<<<<<< HEAD
 app.get('/get-tweets-by-location', function (req, res) {
 
 	var lat = req.query.lat;
@@ -118,16 +103,11 @@ app.get('/get-tweets-by-location', function (req, res) {
 });
 
 app.get('/get-tweets', function (req, res) {
-=======
-app.get('/get-tweets', _serverSentEvents2.default, function (req, res) {
->>>>>>> refs/remotes/origin/master
 
-	var lat = req.query.latitude;
-	var lon = req.query.longitude;
+	var search = req.query.search;
 
 	var processedTweets = [];
 
-<<<<<<< HEAD
 	_twitterservice2.default.getTweetsBySearchTerm(search, function (tweets) {
 
 		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {
@@ -136,19 +116,6 @@ app.get('/get-tweets', _serverSentEvents2.default, function (req, res) {
 
 		res.json(processedTweets);
 	});
-=======
-	var params = {
-		screen_name: 'nodejs',
-		geocode: lat + ',' + lon + ',' + 10 + 'mi'
-	};
-
-	// this.client.get(this.querystring, params, (error, tweets, response) => {
-	// 	_(tweets.statuses).forEach((tweet) => {		
-	// 		var processedTweet = JSON.stringify(processTweet(tweet));
-	// 		res.sse('data: ' + processedTweet + '\n\n');			
-	// 	});
-	// });				
->>>>>>> refs/remotes/origin/master
 });
 
 function processTweet(tweet, cb) {
