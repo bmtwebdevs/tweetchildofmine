@@ -1,21 +1,26 @@
 $(function () {
 
   'use strict';
-
-
-
-  var tweetEvent = new EventSource("tweet-stream?search=brexit");
-
-  tweetEvent.onmessage = function(e) {
+  
+  
+     $('#search-btn').click(function(e) {   
+     e.preventDefault();
+                       
+      var term = $('#searchTerm').val();           
+      newSearch(term);
+      return false;     
+   });       
+     
+  
+  function listenToMessages(e) {
+        
     if(e.data) {
       var tweet = JSON.parse(e.data);
       var emotion = (tweet.faceEmotion) ? tweet.faceEmotion + " " + tweet.textScore : tweet.textScore;
-      
-      
+            
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
-
       $("#media-body").prepend(
-        "<img class='media-object'' src='" +tweet.media_url +
+        "<img class='media-object'' src='" + tweet.media_url +
         "' alt=''>" +
         "</div>" +
         "<h4><b>" + tweet.text + 
@@ -24,10 +29,56 @@ $(function () {
         "</h6><h7>" + emotion +
         "</h7>"+
         "</div>");
-        
-       updateLocationTable(tweet.location, emotion);
     }
-  } 
+    
+    updateLocationTable(tweet.location, emotion);
+  
+  }
+  
+  var tweetEvent = new EventSource("tweet-stream?search=brexit");  
+  tweetEvent.addEventListener('message', listenToMessages);
+     
+   // 
+   function newSearch(param) {     
+     
+     tweetEvent.close();     
+     
+     tweetEvent.removeEventListener('message', listenToMessages);
+     
+     tweetEvent = null;
+     
+     tweetEvent = new EventSource("tweet-stream?search=" + param);
+     
+     tweetEvent.addEventListener('message', listenToMessages)
+     
+   }
+
+  //var tweetEvent = new EventSource("tweet-stream?search=brexit");
+
+//   tweetEvent.onmessage = function(e) {
+//     if(e.data) {
+//       var tweet = JSON.parse(e.data);
+//       var emotion = (tweet.faceEmotion) ? tweet.faceEmotion + " " + tweet.textScore : tweet.textScore;
+//       
+//       
+//       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
+// 
+//       $("#media-body").prepend(
+//         "<img class='media-object'' src='" +tweet.media_url +
+//         "' alt=''>" +
+//         "</div>" +
+//         "<h4><b>" + tweet.text + 
+//         "</b></h4><h5>" + tweet.when + 
+//         "</h5><h6>" + tweet.userName +
+//         "</h6><h7>" + emotion +
+//         "</h7>"+
+//         "</div>");
+//        updateLocationTable(tweet.location, emotion); 
+//        
+//     }
+//   } 
+
+var tweetlocations = ['Manchester','Bristol','Birmingham','Edinburgh','London'];
 
 function updateLocationTable(tweetlocation, emotion){
     
@@ -88,7 +139,7 @@ function updateLocationTable(tweetlocation, emotion){
 }
 
 function isInLocationList(tweetlocation){
-    var tweetlocations = ['Manchester','Bristol','Birmingham','Edinburgh','London']
+    
     
     for(var i = 0; i < tweetlocations.length; i++){
         var id;
