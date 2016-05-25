@@ -1,7 +1,7 @@
 {
-  "name": "recognizerator",
+  "name": "Tweet Child of mine",
   "version": "1.0.0",
-  "description": "",
+  "description": "Tweet emotion engine",
   "main": "main.js",
   "scripts": {
     "start": "node server/lib/server.js",
@@ -37,7 +37,7 @@
     "node-oxford-emotion": "^1.0.4",
     "path": "^0.12.7",
     "sentiment": "^1.0.6",
-    "sse": "0.0.6",
+    "server-sent-events": "^1.0.0",
     "twitter": "^1.3.0",
     "typescript-require": "^0.2.9"
   }
