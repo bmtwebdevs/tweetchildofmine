@@ -50,6 +50,15 @@ var twitterservice = (function () {
             });
         }
     };
+    twitterservice.prototype.getTwitterStream = function () {
+        var stream = this.client.stream('statuses/filter', { track: 'javascript' });
+        stream.on('data', function (tweet) {
+            console.log(tweet.text);
+        });
+        stream.on('error', function (error) {
+            throw error;
+        });
+    };
     twitterservice.prototype.getTweets2 = function (location, cb) {
         var params = {
             screen_name: 'nodejs',

@@ -72,7 +72,7 @@ export class twitterservice {
         }
 
 
-    }
+    }   
     
     getTweets2(location, cb) {        
                                     
