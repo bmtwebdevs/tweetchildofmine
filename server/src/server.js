@@ -14,92 +14,92 @@ var app = express();
 app.server = http.createServer(app);
 
 var client = new Twitter({
-	consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
-	consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
-	access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
-	access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
+	consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
+	consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
+	access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
+	access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
 });
 
 // routes
 app.get('/', (req, res) => {
-	
-	
-		
-	res.sendFile(path.normalize(__dirname + './../../web/index.html'));	
+
+
+
+	res.sendFile(path.normalize(__dirname + './../../web/index.html'));
 });
 
 app.use(express.static(path.normalize(__dirname + './../../web/')));
 
 
 // app.get('/get-tweets-mock', (req, res) => {
-// 	
-// 	var analyser = new TextAnalyser();		
-// 	
+//
+// 	var analyser = new TextAnalyser();
+//
 // 	res.json(analyser.processTweets());
-// 	
+//
 // });
-// 
+//
 app.get('/tweet-stream', sse, (req, res) => {
-	
+
 	var stream = client.stream('statuses/filter', {track: 'bristol'});
-        
+
 	stream.on('data', function(tweet) {
-		
+
 		var processedTweet = JSON.stringify(processTweet(tweet));
 		res.sse('data:' + processedTweet + '\n\n');
-		
+
 	});
- 
+
 	stream.on('error', function(error) {
 		throw error;
-	});		
-	
+	});
+
 });
 
 app.get('/get-tweets', sse, (req, res) => {
-	
+
 	var lat = req.query.latitude;
 	var lon = req.query.longitude;
-	
+
 	var processedTweets = [];
-	
-	
+
+
 	var params = {
 		screen_name : 'nodejs',
 		geocode : lat + ',' + lon + ',' + 10 + 'mi'
 	};
-                                        
+
 	// this.client.get(this.querystring, params, (error, tweets, response) => {
-	// 	_(tweets.statuses).forEach((tweet) => {		
+	// 	_(tweets.statuses).forEach((tweet) => {
 	// 		var processedTweet = JSON.stringify(processTweet(tweet));
-	// 		res.sse('data: ' + processedTweet + '\n\n');			
+	// 		res.sse('data: ' + processedTweet + '\n\n');
 	// 	});
-	// });				
+	// });
 });
 
 function processTweet(tweet) {
-	
-	//console.log(tweet);	
+
+	//console.log(tweet);
 	var tweetModel = {};
-	
+
 	tweetModel.when = tweet.created_at;
 	tweetModel.text = tweet.text;
-	
+
 	// text processing
 	tweetModel.textScore = sentiment(tweet.text).score;
-	
-	// face processing		
-	if(tweet.entities.media && tweet.entities.media[0].url) {		
+
+	// face processing
+	if(tweet.entities.media && tweet.entities.media[0].url) {
 		tweetModel.url = tweet.entities.media[0].url;
-		return face.analyseMyFaceFromUrl(tweet.entities.media[0].url, function(result) {    	
+		return face.analyseMyFaceFromUrl(tweet.entities.media[0].url, function(result) {
 			//console.log(result.statusText, result.emotion);
-			
+
 			tweetModel.faceScore = result.emotion;
 			return tweetModel;
 		});
-	} else {	
+	} else {
 		return tweetModel;
-	}		
+	}
 }
 
 // create server
@@ -108,4 +108,3 @@ var port = process.env.PORT || 5000;
 app.listen(port, () => {
    console.log("Listening on " + port);
 });
-

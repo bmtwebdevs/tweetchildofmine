@@ -7,20 +7,6 @@ $(function () {
    * Here we will create a few charts using ChartJS
    */
 
-   var url = '/get-tweets';
-
-   $.getJSON(url,
-    function (json) {
-        var tr;
-        for (var i = 0; i < json.length; i++) {
-            tr = $('<tr/>');
-            tr.append("<td>" + json[i].User_Name + "</td>");
-            tr.append("<td>" + json[i].score + "</td>");
-            tr.append("<td>" + json[i].team + "</td>");
-            $('table').append(tr);
-        }
-    });
-
    $.ajax({
      url: '/get-tweets',
      dataType: 'json',
@@ -71,28 +57,29 @@ $(function () {
 
 function showTweets(data) {
 
-var json = [
-    {
-        location: 'manchester',
-        positive: '4',
-        negative: '10'
-    },
-    {
-        location: 'bristol',
-        positive: '18',
-        negative: '25'
+    var json = [
+        {
+            location: 'manchester',
+            positive: '4',
+            negative: '10'
+        },
+        {
+            location: 'bristol',
+            positive: '18',
+            negative: '25'
+        }
+    ];
+    //TODO need to get json and work out format, then process data into correct format
+    //var html =
+    var tr;
+    for (var i = 0; i < json.length; i++) {
+        tr = $('<tr>');
+        tr.append("<td>" + json[i].location + "</td>");
+        tr.append("<td>" + json[i].positive + "</td>");
+        tr.append("<td>" + json[i].negative + "</td>");
+        tr.append("</tr>");
+        $('tweetTable').append(tr);
     }
-];
-//TODO need to get json and work out format, then process data into correct format
-  //var html =
-  var tr;
-  for (var i = 0; i < json.length; i++) {
-      tr = $('<tr/>');
-      tr.append("<td>" + json[i].location + "</td>");
-      tr.append("<td>" + json[i].positive + "</td>");
-      tr.append("<td>" + json[i].negative + "</td>");
-      $('tweetTable').append(tr);
-  }
 }
 
   //-----------------------
