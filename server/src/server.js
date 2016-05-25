@@ -19,27 +19,14 @@ var client = new Twitter({
 	consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
 	access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
 	access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
-
 });
 
 // routes
 app.get('/', (req, res) => {
-
 	res.sendFile(path.normalize(__dirname + './../../web/index.html'));
-
 });
 
 app.use(express.static(path.normalize(__dirname + './../../web/')));
-
-
-// app.get('/get-tweets-mock', (req, res) => {
-//
-// 	var analyser = new TextAnalyser();
-//
-// 	res.json(analyser.processTweets());
-//
-// });
-//
 
 app.get('/tweet-stream', sse, (req, res) => {
 
@@ -52,45 +39,17 @@ app.get('/tweet-stream', sse, (req, res) => {
 	var stream = client.stream('statuses/filter', {track: req.query.search });
         
 	stream.on('data', function(tweet) {		
-		var processedTweet = JSON.stringify(processTweet(tweet));
-		res.sse('data:' + processedTweet + '\n\n');		
+		processTweet(tweet, function(processedTweet) {
+			res.sse('data:' + JSON.stringify(processedTweet) + '\n\n');			
+		});
+		
 	});
 
 	stream.on('error', function(error) {
 		console.log(error);
-
-		//res.json(error);
 	});
 
 });
-
-
-// 		throw error;
-// 	});
-//
-// });
-
-// app.get('/get-tweets', sse, (req, res) => {
-//
-// 	var lat = req.query.latitude;
-// 	var lon = req.query.longitude;
-//
-// 	var processedTweets = [];
-//
-//
-// 	var params = {
-// 		screen_name : 'nodejs',
-// 		geocode : lat + ',' + lon + ',' + 10 + 'mi'
-// 	};
-
-	// this.client.get(this.querystring, params, (error, tweets, response) => {
-	// 	_(tweets.statuses).forEach((tweet) => {
-	// 		var processedTweet = JSON.stringify(processTweet(tweet));
-	// 		res.sse('data: ' + processedTweet + '\n\n');
-	// 	});
-	// });
-// 	});					
-// });
 
 app.get('/get-tweets-by-location', (req, res) => {
 	
@@ -149,9 +108,7 @@ function processTweet(tweet, cb) {
 		tweetModel.url = tweet.entities.media[0].url;
 		tweetModel.media_url = tweet.entities.media[0].media_url
 		face.analyseMyFaceFromUrl(tweet.entities.media[0].media_url, function(result) {    	
-			console.log(result.statusText, result.emotion);
-			
-
+			console.log(result.statusText, result.emotion);			
 			tweetModel.faceScore = result.emotion;
 			cb(tweetModel);
 		});
