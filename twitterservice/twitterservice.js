@@ -50,9 +50,16 @@ var twitterservice = (function () {
             });
         }
     };
-    twitterservice.prototype.getTweets2 = function (search, cb) {
+    twitterservice.prototype.getTweetsBySearchTerm = function (search, cb) {
         console.log(search);
         this.client.get(this.querystring, { screen_name: 'nodejs', q: search }, function (error, tweets, response) {
+            console.log(error);
+            cb(tweets);
+        });
+    };
+    twitterservice.prototype.getTweetsByLocation = function (location, cb) {
+        console.log(location);
+        this.client.get(this.querystring, { screen_name: 'nodejs', geocode: location.lat + ',' + location.lon + ',' + 10 + 'mi' }, function (error, tweets, response) {
             console.log(error);
             cb(tweets);
         });

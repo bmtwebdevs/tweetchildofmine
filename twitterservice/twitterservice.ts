@@ -103,9 +103,9 @@ export class twitterservice {
     //
     //     }
 
-
-    getTweets2(search, cb) {
-
+    
+    getTweetsBySearchTerm(search, cb) {        
+            
         console.log(search);
 
         this.client.get(this.querystring, { screen_name: 'nodejs', q: search }, (error, tweets, response) => {
@@ -115,6 +115,20 @@ export class twitterservice {
             cb(tweets)
 
         });
+    }
+    
+    getTweetsByLocation(location, cb) {        
+            
+        console.log(location);
+
+        this.client.get(this.querystring, { screen_name: 'nodejs', geocode : location.lat + ',' + location.lon + ',' + 10 + 'mi'}, (error, tweets, response) => {   
+
+            console.log(error);
+
+            cb(tweets)
+                        
+        }); 
+        
     }
 
     getTweets(callback){

@@ -49,12 +49,14 @@ var face = new _face2.default();
 
 var app = (0, _express2.default)();
 app.server = _http2.default.createServer(app);
+
 var test = '';
 var client = new _twitter2.default({
 	consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
 	consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
 	access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
 	access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
+
 });
 
 // routes
@@ -76,11 +78,13 @@ app.use(_express2.default.static(_path2.default.normalize(__dirname + './../../w
 
 app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 
-	var bath = ['51.3758', '-2.3599'];
-	var sanFrancisco = ['-122.75', '36.8', '-121.75', '37.8'];
-	var newYork = ['-74,40', '-73,41'];
+	// var bath = ['51.3758', '-2.3599'];
+	// var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
+	// var newYork = ['-74,40','-73,41'];
 
-	var stream = client.stream('statuses/filter', { track: 'sanFrancisco' });
+	console.log(req.query);
+
+	var stream = client.stream('statuses/filter', { track: req.query.search });
 
 	stream.on('data', function (tweet) {
 		var processedTweet = JSON.stringify(processTweet(tweet));
@@ -89,6 +93,7 @@ app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 
 	stream.on('error', function (error) {
 		console.log(error);
+
 		//res.json(error);
 	});
 });
@@ -117,14 +122,17 @@ app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 // 		res.sse('data: ' + processedTweet + '\n\n');
 // 	});
 // });
+// 	});					
+// });
 
-app.get('/get-tweets', function (req, res) {
+app.get('/get-tweets-by-location', function (req, res) {
 
-	var search = req.query.search;
+	var lat = req.query.lat;
+	var lon = req.query.lon;
 
 	var processedTweets = [];
 
-	_twitterservice2.default.getTweets2(search, function (tweets) {
+	_twitterservice2.default.getTweetsByLocation({ lat: lat, lon: lon }, function (tweets) {
 
 		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {
 			processedTweets.push(processTweet(tweet));
@@ -134,28 +142,49 @@ app.get('/get-tweets', function (req, res) {
 	});
 });
 
-function processTweet(tweet) {
+app.get('/get-tweets', function (req, res) {
 
-	//console.log(tweet);
+	var search = req.query.search;
+
+	var processedTweets = [];
+
+	_twitterservice2.default.getTweetsBySearchTerm(search, function (tweets) {
+
+		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {
+			processedTweets.push(processTweet(tweet));
+		});
+
+		res.json(processedTweets);
+	});
+});
+
+function processTweet(tweet, cb) {
+
+	//console.log(tweet);	
 	var tweetModel = {};
-
+	tweetModel.userName = tweet.user.name;
 	tweetModel.when = tweet.created_at;
 	tweetModel.text = tweet.text;
+	tweetModel.location = tweet.user.location;
+
+	tweetModel.geo = tweet.geo;
+	tweetModel.coordinates = tweet.coordinates;
 
 	// text processing
 	tweetModel.textScore = (0, _sentiment2.default)(tweet.text).score;
 
-	// face processing
+	// face processing		
 	if (tweet.entities.media && tweet.entities.media[0].url) {
 		tweetModel.url = tweet.entities.media[0].url;
-		return face.analyseMyFaceFromUrl(tweet.entities.media[0].url, function (result) {
-			//console.log(result.statusText, result.emotion);
+		tweetModel.media_url = tweet.entities.media[0].media_url;
+		face.analyseMyFaceFromUrl(tweet.entities.media[0].media_url, function (result) {
+			console.log(result.statusText, result.emotion);
 
 			tweetModel.faceScore = result.emotion;
-			return tweetModel;
+			cb(tweetModel);
 		});
 	} else {
-		return tweetModel;
+		cb(tweetModel);
 	}
 }
 
