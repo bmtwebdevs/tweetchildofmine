@@ -37,16 +37,26 @@ div.media-left {
 
 .tweet-panel {
   padding: 10px;
-  animation: new-item-animation .9s linear forwards;
+  animation: new-item-animation .9s linear forwards;*/
+  
 }
 
-@keyframes new-item-animation {
-    from {
-        transform: translateY(-400px);
+
+ 
+@keyframes restored-item-animation {
+    0% {
+        opacity: 0;
+        transform: translateY(600px) rotateZ(90deg);
     }
  
-    to {
-        transform : translateY(0);
+    10% {
+        opacity: 1;
+        transform: translateY(600px) rotateZ(90deg);
+    }
+ 
+    100% {
+        opacity: 1;
+        transform: rotateZ(0);
     }
 }
   
@@ -145,6 +155,7 @@ div.media-left {
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
+      <table style='width:100%; height:2px'><tr id="tablecolours"></tr></table>
       <h1>
         Tweet Child of Mine
         <small>Version 1.0</small>

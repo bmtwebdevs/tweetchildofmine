@@ -50,7 +50,7 @@ $(function () {
   
   }
   
-  var tweetEvent = new EventSource("tweet-stream?search=brexit");  
+  var tweetEvent = new EventSource("tweet-stream?search=selfie");  
   tweetEvent.addEventListener('message', listenToMessages);
      
    // 
@@ -214,7 +214,11 @@ function scoreBg(emotion) {
   
   h = (emotion + 10) * 5;
   console.log(emotion, "hue:", h, "sat", s);
-  return "hsla(" + h + "," + s + "%,"+ b + "%, 1)";
+  var colour = "hsla(" + h + "," + s + "%,"+ b + "%, 1)";
+  
+  $("#tablecolours").append("<td style='background-color:" + colour +  "'>&nbsp;</td>");
+  
+  return colour
 }
   //-----------------------
   //- MONTHLY SALES CHART -
