@@ -3,9 +3,9 @@ $(function () {
   'use strict';
   
   
-     $('#search-btn').click(function(e) {   
-     e.preventDefault();
-                       
+  $('#search-btn').click(function(e) {   
+      
+      e.preventDefault();                       
       var term = $('#searchTerm').val();           
       newSearch(term);
       return false;     
@@ -43,7 +43,8 @@ $(function () {
         "</h5><hr size='3'/></div>");
         
     
-    updateLocationTable(tweet.location, emotion);
+      updateLocationTable(tweet.location, emotion);
+    }
   
   }
   
