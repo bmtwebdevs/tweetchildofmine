@@ -1,41 +1,26 @@
 $(function () {
 
   'use strict';
-
-  /* ChartJS
-   * -------
-   * Here we will create a few charts using ChartJS
-   */
-
-
-   // $('#search-btn').on('click', function(){
-   //
-   //     $.ajax({
-   //       url: '/get-tweets?search=',
-   //       dataType: 'json',
-   //       success: function(data) {
-   //         //data.then((result) => {
-   //           console.log(data);
-   //         //})
-   //         showTweets(data);
-   //       }
-   //     });
-   //    //showTweets();
-   // });
-
-
-  var tweetEvent = new EventSource("tweet-stream?search=brexit");
-
-  tweetEvent.onmessage = function(e) {
+  
+  
+     $('#search-btn').click(function(e) {   
+     e.preventDefault();
+                       
+      var term = $('#searchTerm').val();           
+      newSearch(term);
+      return false;     
+   });       
+     
+  
+  function listenToMessages(e) {
+        
     if(e.data) {
       var tweet = JSON.parse(e.data);
       var emotion = (tweet.faceEmotion) ? tweet.faceEmotion + " " + tweet.textScore : tweet.textScore;
-      
-      
+            
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
-
       $("#media-body").prepend(
-        "<img class='media-object'' src='" +tweet.media_url +
+        "<img class='media-object'' src='" + tweet.media_url +
         "' alt=''>" +
         "</div>" +
         "<h4><b>" + tweet.text + 
@@ -44,31 +29,56 @@ $(function () {
         "</h6><h7>" + emotion +
         "</h7>"+
         "</div>");
-        
-       updateLocationTable(tweet.location, emotion);
     }
-  } 
-                                   
-  // var locations = [
-  //     { latitude: 53.483959, longitude: -2.244644},
-  //     { latitude: 51.4545, longitude: 2.5879 },
-  //     { latitude: 52.4862, longitude: 1.8904 }
-  //     ];
+    
+    updateLocationTable(tweet.location, emotion);
+  
+  }
+  
+  var tweetEvent = new EventSource("tweet-stream?search=brexit");  
+  tweetEvent.addEventListener('message', listenToMessages);
+     
+   // 
+   function newSearch(param) {     
+     
+     tweetEvent.close();     
+     
+     tweetEvent.removeEventListener('message', listenToMessages);
+     
+     tweetEvent = null;
+     
+     tweetEvent = new EventSource("tweet-stream?search=" + param);
+     
+     tweetEvent.addEventListener('message', listenToMessages)
+     
+   }
 
-  //     for (var index = 0; index < locations.length; index++) {
-  //         var element = locations[index];
+  //var tweetEvent = new EventSource("tweet-stream?search=brexit");
 
-  //           $.ajax({
-  //             url: '/get-tweets',
-  //             data: element,
-  //             dataType: 'json',
-  //             success: function(data) {
-  //               console.log(data);
-  //               showTweets(data);
-  //             }
-  //         });
+//   tweetEvent.onmessage = function(e) {
+//     if(e.data) {
+//       var tweet = JSON.parse(e.data);
+//       var emotion = (tweet.faceEmotion) ? tweet.faceEmotion + " " + tweet.textScore : tweet.textScore;
+//       
+//       
+//       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
+// 
+//       $("#media-body").prepend(
+//         "<img class='media-object'' src='" +tweet.media_url +
+//         "' alt=''>" +
+//         "</div>" +
+//         "<h4><b>" + tweet.text + 
+//         "</b></h4><h5>" + tweet.when + 
+//         "</h5><h6>" + tweet.userName +
+//         "</h6><h7>" + emotion +
+//         "</h7>"+
+//         "</div>");
+//        updateLocationTable(tweet.location, emotion); 
+//        
+//     }
+//   } 
 
-  //     }
+var tweetlocations = ['Manchester','Bristol','Birmingham','Edinburgh','London'];
 
 function updateLocationTable(tweetlocation, emotion){
     
@@ -129,7 +139,7 @@ function updateLocationTable(tweetlocation, emotion){
 }
 
 function isInLocationList(tweetlocation){
-    var tweetlocations = ['Manchester','Bristol','Birmingham','Edinburgh','London']
+    
     
     for(var i = 0; i < tweetlocations.length; i++){
         var id;
