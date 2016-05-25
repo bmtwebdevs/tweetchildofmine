@@ -5,65 +5,8 @@ $(function () {
   /* ChartJS
    * -------
    * Here we will create a few charts using ChartJS
-   */
-
-
-   // $('#search-btn').on('click', function(){
-   //
-   //     $.ajax({
-   //       url: '/get-tweets?search=',
-   //       dataType: 'json',
-   //       success: function(data) {
-   //         //data.then((result) => {
-   //           console.log(data);
-   //         //})
-   //         showTweets(data);
-   //       }
-   //     });
-   //    //showTweets();
-   // });
-
-  var tweetEvent = new EventSource("tweet-stream");
-
-  tweetEvent.onmessage = function(e) {
-    if(e.data) {
-      var tweet = JSON.parse(e.data);
-      var emotion = (tweet.faceEmotion) ? tweet.faceEmotion + " " + tweet.textScore : tweet.textScore;
-      
-      
-      // it would be better to add the tweet to a json object that the table and other parts of the page can read from
-      $("#media-body").prepend(
-        "<class='media-left'><img class='media-object'' src='" +tweet.picture +
-        "' alt='Img'>" +
-        "</div>" +
-        "<h4>" + tweet.text + 
-        "</h4><h5>" + tweet.when + 
-        "</h5><h6>" + tweet.who +
-        "</h6>" +
-        "</div>");
-    }
-  } 
-                                   
-  // var locations = [
-  //     { latitude: 53.483959, longitude: -2.244644},
-  //     { latitude: 51.4545, longitude: 2.5879 },
-  //     { latitude: 52.4862, longitude: 1.8904 }
-  //     ];
-
-  //     for (var index = 0; index < locations.length; index++) {
-  //         var element = locations[index];
-
-  //           $.ajax({
-  //             url: '/get-tweets',
-  //             data: element,
-  //             dataType: 'json',
-  //             success: function(data) {
-  //               console.log(data);
-  //               showTweets(data);
-  //             }
-  //         });
-
-  //     }
+   */   
+    
 
 function getInitialData(){
     var locations = ['manchester','bristol','birmingham','edinburgh','london']
