@@ -59,12 +59,12 @@
       <!-- Sidebar user panel -->
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
-          <input type="text" name="search" class="form-control" placeholder="Search...">          
+          <input type="text" name="search" class="form-control" placeholder="Search...">
               <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
               </span>
-              
+
         </div>
       </form>
 
@@ -75,9 +75,9 @@
                 <select class="form-control">
                     <option value="">Location</option>
                     <option value="bristol">Bristol</option>
-                    <option value="london">London</option>                                        
-                </select>    
-              </span>              
+                    <option value="london">London</option>
+                </select>
+              </span>
         </div>
       </form>
 
@@ -191,8 +191,6 @@
       </div>
       <!-- /.row -->
 
-<button id="search-btn">click me</button>
-
       <div class="row">
           <div class="col-md-12">
             <div class="box">
@@ -209,9 +207,34 @@
                 <div class="box-body">
                   <table id="tweettable">
                       <tr>
-                          <th>Location</th>
-                          <th>Happy/Positive Tweets</th>
-                          <th>Angry/Negative Tweets</th>
+                          <th class="col-md-3 col-sm-6 col-xs-12">Location</th>
+                          <th class="col-md-3 col-sm-6 col-xs-12">Happy/Positive Tweets</th>
+                          <th class="col-md-3 col-sm-6 col-xs-12">Angry/Negative Tweets</th>
+                      </tr>
+                      <tr>
+                          <td>Manchester</td>
+                          <td id="manchester-positive-value">0</td>
+                          <td id="manchester-negative-value">0</td>
+                      </tr>
+                      <tr>
+                          <td>Bristol</td>
+                          <td id="bristol-positive-value">0</td>
+                          <td id="bristol-negative-value">0</td>
+                      </tr>
+                      <tr>
+                          <td>Birmingham</td>
+                          <td id="birmingham-positive-value">0</td>
+                          <td id="birmingham-negative-value">0</td>
+                      </tr>
+                      <tr>
+                          <td>Edinburgh</td>
+                          <td id="edinburgh-positive-value">0</td>
+                          <td id="edinburgh-negative-value">0</td>
+                      </tr>
+                      <tr>
+                          <td>London</td>
+                          <td id="london-positive-value">0</td>
+                          <td id="london-negative-value">0</td>
                       </tr>
                   </table>
                 </div>
@@ -646,6 +669,3 @@
 
 </body>
 </html>
-
-
-

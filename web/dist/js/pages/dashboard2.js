@@ -7,19 +7,21 @@ $(function () {
    * Here we will create a few charts using ChartJS
    */
 
-   $('#search-btn').on('click', function(){
-       $.ajax({
-         url: '/get-tweets',
-         dataType: 'json',
-         success: function(data) {
-           //data.then((result) => {
-             console.log(data);
-           //})
-           showTweets(data);
-         }
-       });
-        //showTweets();
-   });
+
+   // $('#search-btn').on('click', function(){
+   //
+   //     $.ajax({
+   //       url: '/get-tweets?search=',
+   //       dataType: 'json',
+   //       success: function(data) {
+   //         //data.then((result) => {
+   //           console.log(data);
+   //         //})
+   //         showTweets(data);
+   //       }
+   //     });
+   //    //showTweets();
+   // });
 
   var tweetEvent = new EventSource("tweet-stream");
 
@@ -56,6 +58,24 @@ $(function () {
 
   //     }
 
+function getInitialData(){
+    var locations = ['manchester','bristol','birmingham','edinburgh','london']
+
+    for(var i = 0; i < locations.length; i++){
+
+    }
+
+    $.ajax({
+      url: '/get-tweets?search=manchester',
+      dataType: 'json',
+      success: function(data) {
+        //data.then((result) => {
+          console.log(data);
+        //})
+        showTweets(data);
+      }
+    });
+}
 
 
 function showTweets(data) {

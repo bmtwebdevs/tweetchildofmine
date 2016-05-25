@@ -49,7 +49,7 @@ var face = new _face2.default();
 
 var app = (0, _express2.default)();
 app.server = _http2.default.createServer(app);
-
+var test = '';
 var client = new _twitter2.default({
 	consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
 	consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
@@ -84,7 +84,6 @@ app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 
 	stream.on('data', function (tweet) {
 		var processedTweet = JSON.stringify(processTweet(tweet));
-		console.log(tweet, processedTweet);
 		res.sse('data:' + processedTweet + '\n\n');
 	});
 
@@ -94,23 +93,37 @@ app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 	});
 });
 
+// 		throw error;
+// 	});
+//
+// });
+
+// app.get('/get-tweets', sse, (req, res) => {
+//
+// 	var lat = req.query.latitude;
+// 	var lon = req.query.longitude;
+//
+// 	var processedTweets = [];
+//
+//
+// 	var params = {
+// 		screen_name : 'nodejs',
+// 		geocode : lat + ',' + lon + ',' + 10 + 'mi'
+// 	};
+
+// this.client.get(this.querystring, params, (error, tweets, response) => {
+// 	_(tweets.statuses).forEach((tweet) => {
+// 		var processedTweet = JSON.stringify(processTweet(tweet));
+// 		res.sse('data: ' + processedTweet + '\n\n');
+// 	});
+// });
+
 app.get('/get-tweets', function (req, res) {
 
 	var search = req.query.search;
 
 	var processedTweets = [];
 
-	// var params = {
-	// 	screen_name: 'nodejs',
-	// 	geocode: lat + ',' + lon + ',' + 10 + 'mi'
-	// };
-
-	// this.client.get(this.querystring, params, (error, tweets, response) => {
-	// 	_(tweets.statuses).forEach((tweet) => {
-	// 		var processedTweet = JSON.stringify(processTweet(tweet));
-	// 		res.sse('data: ' + processedTweet + '\n\n');
-	// 	});
-	// });
 	_twitterservice2.default.getTweets2(search, function (tweets) {
 
 		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {

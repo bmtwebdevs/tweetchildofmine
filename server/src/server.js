@@ -12,7 +12,7 @@ import Twitter from 'twitter';
 
 var app = express();
 app.server = http.createServer(app);
-
+var test ='';
 var client = new Twitter({
 	consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
 	consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
@@ -58,6 +58,7 @@ app.get('/tweet-stream', sse, (req, res) => {
 	});
 
 });
+
 
 // 		throw error;
 // 	});
