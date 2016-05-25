@@ -13,23 +13,36 @@ import Twitter from 'twitter';
 var app = express();
 app.server = http.createServer(app);
 
-var client = new Twitter({	
-	consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
-	consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
-	access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
-	access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
+var test ='';
+var client = new Twitter({
+	consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
+	consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
+	access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
+	access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
+
 });
 
 // routes
 app.get('/', (req, res) => {
-				
-	res.sendFile(path.normalize(__dirname + './../../web/index.html'));	
+
+	res.sendFile(path.normalize(__dirname + './../../web/index.html'));
+
 });
 
 app.use(express.static(path.normalize(__dirname + './../../web/')));
 
+
+// app.get('/get-tweets-mock', (req, res) => {
+//
+// 	var analyser = new TextAnalyser();
+//
+// 	res.json(analyser.processTweets());
+//
+// });
+//
+
 app.get('/tweet-stream', sse, (req, res) => {
-	
+
 	// var bath = ['51.3758', '-2.3599'];
 	// var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
 	// var newYork = ['-74,40','-73,41']; 
@@ -41,14 +54,43 @@ app.get('/tweet-stream', sse, (req, res) => {
 	stream.on('data', function(tweet) {		
 		var processedTweet = JSON.stringify(processTweet(tweet));
 		res.sse('data:' + processedTweet + '\n\n');		
-
 	});
- 
+
 	stream.on('error', function(error) {
 		console.log(error);
-	});				
-	
+
+		//res.json(error);
+	});
+
 });
+
+
+// 		throw error;
+// 	});
+//
+// });
+
+// app.get('/get-tweets', sse, (req, res) => {
+//
+// 	var lat = req.query.latitude;
+// 	var lon = req.query.longitude;
+//
+// 	var processedTweets = [];
+//
+//
+// 	var params = {
+// 		screen_name : 'nodejs',
+// 		geocode : lat + ',' + lon + ',' + 10 + 'mi'
+// 	};
+
+	// this.client.get(this.querystring, params, (error, tweets, response) => {
+	// 	_(tweets.statuses).forEach((tweet) => {
+	// 		var processedTweet = JSON.stringify(processTweet(tweet));
+	// 		res.sse('data: ' + processedTweet + '\n\n');
+	// 	});
+	// });
+// 	});					
+// });
 
 app.get('/get-tweets-by-location', (req, res) => {
 	
@@ -69,21 +111,23 @@ app.get('/get-tweets-by-location', (req, res) => {
 });
 
 app.get('/get-tweets', (req, res) => {
-	
-	var search = req.query.search;	
-	
+
+	var search = req.query.search;
+
 	var processedTweets = [];
+
 						
 	ts.getTweetsBySearchTerm(search, (tweets) => {	
 		
 		_(tweets.statuses).forEach((tweet) => {		
 			processedTweets.push(processTweet(tweet));			
+
 		});
-						
-		res.json(processedTweets);	
-	});	                                        			
-		
+
+		res.json(processedTweets);
+	});
 });
+
 
 function processTweet(tweet, cb) {
 	
@@ -107,9 +151,11 @@ function processTweet(tweet, cb) {
 		face.analyseMyFaceFromUrl(tweet.entities.media[0].media_url, function(result) {    	
 			console.log(result.statusText, result.emotion);
 			
+
 			tweetModel.faceScore = result.emotion;
 			cb(tweetModel);
 		});
+
 	} else {	
 		cb(tweetModel);
 	}		
