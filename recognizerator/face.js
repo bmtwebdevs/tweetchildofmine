@@ -1,4 +1,5 @@
 var oxfordEmotion = require("node-oxford-emotion")("94bbf0c64e9b47c88faa8db3875aeb37")
+var _ = require('lodash');
 
 var Recognizerator = function () {};
         
@@ -17,7 +18,7 @@ Recognizerator.prototype.analyseMyFaceFromUrl = function(imageUrl, cb) {
                 sortable.sort(function(a, b) {return b[1] - a[1] }); // sort with highest first
                 var highestEmotion = sortable[0][0]; // vom
                 // see if the emotion is in the list of emotions
-                var foundEmotion = emotions.find(function(o) { return o.emotion  === highestEmotion});
+                var foundEmotion = _(emotions).find(function(o) { return o.emotion  === highestEmotion});
                 if(foundEmotion) {
                     foundEmotion.count ++;
                 } else {
