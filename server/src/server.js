@@ -14,68 +14,57 @@ var app = express();
 app.server = http.createServer(app);
 
 var client = new Twitter({
-	consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
-	consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
-	access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
-	access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
+	consumer_key: 'CKMFkWRso9BXQ68NYR8ODjHHG',
+	consumer_secret: 'x04MYu3bpcz3yt63pJZuTfmxbBuWl7kdm79Mbu7Mh1wSi14Pts',
+	access_token_key: '131168610-cDDxo8FtunKk6cyx7ztN7jQYaI8ztMzhMhfea5k',
+	access_token_secret: 'kaHTr5FxRVYToam6YzbazVfq03ZkuvIvKw4swZXM'
 });
 
 // routes
 app.get('/', (req, res) => {
-	
-	
-		
+				
 	res.sendFile(path.normalize(__dirname + './../../web/index.html'));	
 });
 
 app.use(express.static(path.normalize(__dirname + './../../web/')));
 
-
-// app.get('/get-tweets-mock', (req, res) => {
-// 	
-// 	var analyser = new TextAnalyser();		
-// 	
-// 	res.json(analyser.processTweets());
-// 	
-// });
-// 
 app.get('/tweet-stream', sse, (req, res) => {
 	
-	var stream = client.stream('statuses/filter', {track: 'bristol'});
+	var bath = ['51.3758', '-2.3599'];
+	var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
+	var newYork = ['-74,40','-73,41'];
+	
+	var stream = client.stream('statuses/filter', {track: 'sanFrancisco'});
         
-	stream.on('data', function(tweet) {
-		
+	stream.on('data', function(tweet) {		
 		var processedTweet = JSON.stringify(processTweet(tweet));
-		res.sse('data:' + processedTweet + '\n\n');
-		
+		res.sse('data:' + processedTweet + '\n\n');		
 	});
  
 	stream.on('error', function(error) {
-		throw error;
-	});		
+		console.log(error);
+		//res.json(error);
+	});				
 	
 });
 
-app.get('/get-tweets', sse, (req, res) => {
+app.get('/get-tweets', (req, res) => {
 	
-	var lat = req.query.latitude;
-	var lon = req.query.longitude;
+	var search = req.query.search;	
 	
 	var processedTweets = [];
-	
-	
-	var params = {
-		screen_name : 'nodejs',
-		geocode : lat + ',' + lon + ',' + 10 + 'mi'
-	};
-                                        
-	// this.client.get(this.querystring, params, (error, tweets, response) => {
-	// 	_(tweets.statuses).forEach((tweet) => {		
-	// 		var processedTweet = JSON.stringify(processTweet(tweet));
-	// 		res.sse('data: ' + processedTweet + '\n\n');			
-	// 	});
-	// });				
+						
+	ts.getTweets2(search, (tweets) => {	
+		
+		_(tweets.statuses).forEach((tweet) => {		
+			processedTweets.push(processTweet(tweet));			
+		});
+						
+		res.json(processedTweets);	
+	});	                                        			
+		
 });
+
 
 function processTweet(tweet) {
 	
