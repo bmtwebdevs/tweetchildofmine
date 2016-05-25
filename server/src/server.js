@@ -54,9 +54,9 @@ app.get('/tweet-stream', sse, (req, res) => {
 app.get('/get-tweets-by-location', (req, res) => {
 	
 	var lat = req.query.lat;
-	var lon = req.query.lon;	
+	var lon = req.query.lon ;	
 	
-	var processedTweets = [];
+	var processedTweets = []; 
 						
 	ts.getTweetsByLocation({ lat: lat, lon: lon }, (tweets) => {	
 		
