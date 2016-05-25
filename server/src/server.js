@@ -39,9 +39,9 @@ app.get('/tweet-stream', sse, (req, res) => {
 	
 	// var bath = ['51.3758', '-2.3599'];
 	// var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
-	// var newYork = ['-74,40','-73,41'];
+	// var newYork = ['-74,40','-73,41']; 
 	
-	console.log(req.query);
+	console.log(req.query); 
 	
 	var stream = client.stream('statuses/filter', {track: req.query.search });
         
@@ -53,7 +53,6 @@ app.get('/tweet-stream', sse, (req, res) => {
  
 	stream.on('error', function(error) {
 		console.log(error);
-		//res.json(error);
 	});				
 	
 });
