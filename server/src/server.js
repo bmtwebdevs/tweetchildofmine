@@ -1,12 +1,12 @@
 import express from 'express';
 import path from 'path';
 import http from 'http';
+import sse from "server-sent-events";
 import _ from 'lodash';
 import sentiment from 'sentiment';
 import ts from '../../twitterservice/twitterservice';
 import * as TextAnalyser from '../../textanalyser/textanalyser';
 import Face from '../../recognizerator/face.js';
-import see from 'server-sent-events';
 var face = new Face();
 import Twitter from 'twitter';
 
@@ -23,13 +23,7 @@ var client = new Twitter({
 // routes
 app.get('/', (req, res) => {
 	
-	ts.getTweets2(function(tweets) {
-		// for each tweets
-		// 	ProcessingInstruction
-		// 	WScript
-		// 	
-		// goto line 13		
-	});
+	
 		
 	res.sendFile(path.normalize(__dirname + './../../web/index.html'));	
 });
@@ -37,16 +31,21 @@ app.get('/', (req, res) => {
 app.use(express.static(path.normalize(__dirname + './../../web/')));
 
 
+// app.get('/get-tweets-mock', (req, res) => {
+// 	
+// 	var analyser = new TextAnalyser();		
+// 	
+// 	res.json(analyser.processTweets());
+// 	
+// });
+// 
 app.get('/tweet-stream', sse, (req, res) => {
 	
-	var stream = client.stream('statuses/filter', {track: 'javascript'});
+	var stream = client.stream('statuses/filter', {track: 'bristol'});
         
 	stream.on('data', function(tweet) {
 		
-		var processedTweet = processTweet(tweet);
-		
-		console.log(processedTweet);
-		
+		var processedTweet = JSON.stringify(processTweet(tweet));
 		res.sse('data:' + processedTweet + '\n\n');
 		
 	});
@@ -57,7 +56,7 @@ app.get('/tweet-stream', sse, (req, res) => {
 	
 });
 
-app.get('/get-tweets', (req, res) => {
+app.get('/get-tweets', sse, (req, res) => {
 	
 	var lat = req.query.latitude;
 	var lon = req.query.longitude;
@@ -70,15 +69,12 @@ app.get('/get-tweets', (req, res) => {
 		geocode : lat + ',' + lon + ',' + 10 + 'mi'
 	};
                                         
-	this.client.get(this.querystring, params, (error, tweets, response) => {
-		
-		_(tweets.statuses).forEach((tweet) => {		
-			processedTweets.push(processTweet(tweet));			
-		});
-			
-		res.json(processedTweets);	                                 
-	}); 
-											
+	// this.client.get(this.querystring, params, (error, tweets, response) => {
+	// 	_(tweets.statuses).forEach((tweet) => {		
+	// 		var processedTweet = JSON.stringify(processTweet(tweet));
+	// 		res.sse('data: ' + processedTweet + '\n\n');			
+	// 	});
+	// });				
 });
 
 function processTweet(tweet) {
@@ -95,7 +91,7 @@ function processTweet(tweet) {
 	// face processing		
 	if(tweet.entities.media && tweet.entities.media[0].url) {		
 		tweetModel.url = tweet.entities.media[0].url;
-		face.analyseMyFaceFromUrl(tweet.entities.media[0].url, function(result) {    	
+		return face.analyseMyFaceFromUrl(tweet.entities.media[0].url, function(result) {    	
 			//console.log(result.statusText, result.emotion);
 			
 			tweetModel.faceScore = result.emotion;
