@@ -55,7 +55,31 @@
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
+
       <!-- Sidebar user panel -->
+      <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="search" class="form-control" placeholder="Search...">          
+              <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+              
+        </div>
+      </form>
+
+
+      <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+              <span class="input-group-btn">
+                <select class="form-control">
+                    <option value="">Location</option>
+                    <option value="bristol">Bristol</option>
+                    <option value="london">London</option>                                        
+                </select>    
+              </span>              
+        </div>
+      </form>
 
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -277,6 +301,8 @@
           <!-- /.row -->
 
           <!-- TABLE: LATEST ORDERS -->
+
+
           <div class="box box-info">
             <div class="box-header with-border">
               <h3 class="box-title">Latest Tweets</h3>
@@ -300,38 +326,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>16/12/2012 01:29</td>
-                    <td>Call of Duty FTW!</td>
-                    <td><span class="label label-success">Bristol</span></td>
-                    <td>
-                      <div class="sparkbar" data-color="#00a65a" data-height="20">100, 100, 100, 100, 100</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>21/02/2013 14:46</td>
-                    <td>The weather today is amazing</td>
-                    <td><span class="label label-warning">London</span></td>
-                    <td>
-                      <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>06/08/2015 11:30</td>
-                    <td>F*CK DONALD TRUMP!</td>
-                    <td><span class="label label-danger">Manchester</span></td>
-                    <td>
-                      <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>24/05/2015 14:30</td>
-                    <td>Today i had pizza</td>
-                    <td><span class="label label-info">Glasgow</span></td>
-                    <td>
-                      <div class="sparkbar" data-color="#00c0ef" data-height="20">90,80,-90,70,-61,83,63</div>
-                    </td>
-                  </tr>
+
                   </tbody>
                 </table>
               </div>
@@ -619,5 +614,10 @@
 <script src="dist/js/pages/dashboard2.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+
+
 </body>
 </html>
+
+
+
