@@ -8,17 +8,17 @@ $(function () {
    */
 
    $('#search-btn').on('click', function(){
-    //    $.ajax({
-    //      url: '/get-tweets',
-    //      dataType: 'json',
-    //      success: function(data) {
-    //        //data.then((result) => {
-    //          console.log(data);
-    //        //})
-    //        showTweets(data);
-    //      }
-    //    });
-    showTweets();
+       $.ajax({
+         url: '/get-tweets',
+         dataType: 'json',
+         success: function(data) {
+           //data.then((result) => {
+             console.log(data);
+           //})
+           showTweets(data);
+         }
+       });
+        //showTweets();
    });
 
   var tweetEvent = new EventSource("tweet-stream");
@@ -58,7 +58,7 @@ $(function () {
 
 
 
-function showTweets() {
+function showTweets(data) {
 
     var json = [
         {
@@ -80,7 +80,7 @@ function showTweets() {
         tr.append("<td>" + json[i].positive + "</td>");
         tr.append("<td>" + json[i].negative + "</td>");
         tr.append("</tr>");
-        $('#tweetTable').append(tr);
+        $('#tweettable').append(tr);
     }
 }
 
