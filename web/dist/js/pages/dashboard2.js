@@ -23,7 +23,7 @@ $(function () {
    //    //showTweets();
    // });
 
-  var tweetEvent = new EventSource("tweet-stream");
+  var tweetEvent = new EventSource("tweet-stream?search=bristol");
 
   tweetEvent.onmessage = function(e) {
     if(e.data) {
@@ -35,12 +35,13 @@ $(function () {
 
       $("#media-body").prepend(
         "<img class='media-object'' src='" +tweet.media_url +
-        "' alt='Img'>" +
+        "' alt=''>" +
         "</div>" +
         "<h4><b>" + tweet.text + 
         "</b></h4><h5>" + tweet.when + 
         "</h5><h6>" + tweet.userName +
-        "</h6>" +
+        "</h6><h7>" + emotion +
+        "</h7>"+
         "</div>");
         
        updateLocationTable(tweet.location, emotion);
