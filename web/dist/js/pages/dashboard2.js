@@ -51,25 +51,7 @@ $(function () {
   }
 
   
-<<<<<<< HEAD
-  var tweetEvent = new EventSource("tweet-stream?search=selfie");  
-  tweetEvent.addEventListener('message', listenToMessages);
-     
-   // 
-   function newSearch(param) {     
-     
-     tweetEvent.close();     
-     
-     tweetEvent.removeEventListener('message', listenToMessages);
-     
-     tweetEvent = null;
-     
-     tweetEvent = new EventSource("tweet-stream?search=" + param);
-     
-     tweetEvent.addEventListener('message', listenToMessages)
-     
-   }
-=======
+
 var tweetEvent = new EventSource("tweet-stream?search=brexit");  
 tweetEvent.addEventListener('message', listenToMessages);
     
@@ -87,8 +69,6 @@ tweetEvent.addEventListener('message', listenToMessages);
     tweetEvent.addEventListener('message', listenToMessages)
     
   }
->>>>>>> master
-
   //var tweetEvent = new EventSource("tweet-stream?search=brexit");
 
 //   tweetEvent.onmessage = function(e) {
