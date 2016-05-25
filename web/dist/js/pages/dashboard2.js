@@ -16,20 +16,32 @@ $(function () {
         
     if(e.data) {
       var tweet = JSON.parse(e.data);
-      var emotion = (tweet.faceEmotion) ? tweet.faceEmotion + " " + tweet.textScore : tweet.textScore;
-            
+
+      var emotion = tweet.textScore;
+      var emotionface = tweet.faceScore;
+      
+      var emotionface1 = "";
+      if (tweet.faceScore) {
+        emotionface1 = "<b><i>Tweet Picture Emotion Level: </b></i>" + emotionface + "</h5>"
+      }
+      
+      var imagehtml = "";
+      if (tweet.media_url) {  
+        imagehtml = "<img class='media-object'' src='" +tweet.media_url + "' alt='' width='128px' height='128px'>";   
+      }
+      
+
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
       $("#media-body").prepend(
-        "<img class='media-object'' src='" + tweet.media_url +
-        "' alt=''>" +
-        "</div>" +
         "<h4><b>" + tweet.text + 
-        "</b></h4><h5>" + tweet.when + 
-        "</h5><h6>" + tweet.userName +
-        "</h6><h7>" + emotion +
-        "</h7>"+
-        "</div>");
-    }
+        "</b></h4><h5><b><i>Tweet Date & Time: </b></i>" + tweet.when + 
+        "</h5><h5><b><i>User: </b></i>" + tweet.userName +
+        "</h5>" + imagehtml +         
+        "<h5><b><i>Tweet Text Emotion Level: </b></i>" + emotion +
+        "</h5>"+
+        "<h5>" + emotionface1 +        
+        "</h5><hr size='3'/></div>");
+        
     
     updateLocationTable(tweet.location, emotion);
   
