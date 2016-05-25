@@ -48,6 +48,24 @@ app.get('/tweet-stream', sse, (req, res) => {
 	
 });
 
+app.get('/get-tweets-by-location', (req, res) => {
+	
+	var lat = req.query.lat;
+	var lon = req.query.lon;	
+	
+	var processedTweets = [];
+						
+	ts.getTweetsByLocation({ lat: lat, lon: lon }, (tweets) => {	
+		
+		_(tweets.statuses).forEach((tweet) => {		
+			processedTweets.push(processTweet(tweet));			
+		});
+						
+		res.json(processedTweets);	
+	});	                                        			
+		
+});
+
 app.get('/get-tweets', (req, res) => {
 	
 	var search = req.query.search;	

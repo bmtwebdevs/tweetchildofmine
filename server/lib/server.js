@@ -84,6 +84,23 @@ app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 	});
 });
 
+app.get('/get-tweets-by-location', function (req, res) {
+
+	var lat = req.query.lat;
+	var lon = req.query.lon;
+
+	var processedTweets = [];
+
+	_twitterservice2.default.getTweetsByLocation({ lat: lat, lon: lon }, function (tweets) {
+
+		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {
+			processedTweets.push(processTweet(tweet));
+		});
+
+		res.json(processedTweets);
+	});
+});
+
 app.get('/get-tweets', function (req, res) {
 
 	var search = req.query.search;
