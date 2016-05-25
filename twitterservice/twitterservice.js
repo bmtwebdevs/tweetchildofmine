@@ -5,14 +5,17 @@ var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
 var Moment = require('moment');
 var _ = require('lodash');
+var geolocation_1 = require("../models/geolocation");
 var repository_1 = require("../repository/repository");
+var tweetdatamodel_1 = require("../models/tweetdatamodel");
+var tweetviewmodel_1 = require("../models/tweetviewmodel");
 var twitterservice = (function () {
     function twitterservice() {
         this.client = new Twitter({
-            consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
-            consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
-            access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
-            access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
+            consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
+            consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
+            access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
+            access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
         });
         this.params = {};
         this.querystring = 'search/tweets/';
@@ -63,6 +66,50 @@ var twitterservice = (function () {
     };
     twitterservice.prototype.getTweets = function (callback) {
         this.cb = callback;
+        this.getTweetsFromApiAndConvertToViewModel();
+    };
+    twitterservice.prototype.getTweetsFromApiAndConvertToViewModel = function () {
+        var data = this.getTweetsFromApi();
+        return this.convertTweetsToViewModel(data);
+    };
+    twitterservice.prototype.getTweetsFromApiAndConvertToDataModel = function () {
+        var tweets = this.getTweetsFromApi();
+        return this.convertTweetsToDataModel(tweets);
+    };
+    twitterservice.prototype.convertTweetsToViewModel = function (tweets) {
+        var results = _.map(tweets, this.convertEachTweetToViewModel);
+        return results;
+    };
+    twitterservice.prototype.convertEachTweetToViewModel = function (tweet) {
+        return new tweetviewmodel_1.default(tweet.text, tweet.entities.media.media_url, new geolocation_1.default(tweet.coordinates[1], tweet.coordinates[0], ''), tweet.when);
+    };
+    twitterservice.prototype.convertTweetsToDataModel = function (tweets) {
+        var parsed = JSON.parse(tweets);
+        var results = _.map(parsed, this.convertEachTweetToDataModel);
+        return results;
+    };
+    twitterservice.prototype.convertEachTweetToDataModel = function (tweet) {
+        return new tweetdatamodel_1.default(tweet, null, null, null);
+    };
+    twitterservice.prototype.getTweetsFromDatabase = function () {
+        return this.repository.getTweets();
+    };
+    twitterservice.prototype.getTweetsFromApi = function () {
+        this.getTweetsAroundLocation(new geolocation_1.default(0, 0, 'Manchester'), 10);
+    };
+    twitterservice.prototype.isApiUpdateRequired = function () {
+        var lastApiCallDate = this.repository.getLastApiCallDate();
+        var now = Moment();
+        var lastCall = Moment(lastApiCallDate);
+        var diffMinutes = now.diff(lastCall, 'minutes');
+        if (diffMinutes > 2) {
+            return true;
+        }
+        return false;
+    };
+    twitterservice.prototype.updateDbWithNewTweets = function () {
+        var tweetsFromApi = this.getTweetsFromApiAndConvertToDataModel();
+        return;
     };
     return twitterservice;
 }());
