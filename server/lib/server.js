@@ -75,7 +75,17 @@ app.use(_express2.default.static(_path2.default.normalize(__dirname + './../../w
 //
 app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 
+<<<<<<< HEAD
+	// var bath = ['51.3758', '-2.3599'];
+	// var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
+	// var newYork = ['-74,40','-73,41'];
+
+	console.log(req.query);
+
+	var stream = client.stream('statuses/filter', { track: req.query.search });
+=======
 	var stream = client.stream('statuses/filter', { track: 'bristol' });
+>>>>>>> refs/remotes/origin/master
 
 	stream.on('data', function (tweet) {
 
@@ -89,13 +99,44 @@ app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 	});
 });
 
+<<<<<<< HEAD
+app.get('/get-tweets-by-location', function (req, res) {
+
+	var lat = req.query.lat;
+	var lon = req.query.lon;
+
+	var processedTweets = [];
+
+	_twitterservice2.default.getTweetsByLocation({ lat: lat, lon: lon }, function (tweets) {
+
+		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {
+			processedTweets.push(processTweet(tweet));
+		});
+
+		res.json(processedTweets);
+	});
+});
+
+app.get('/get-tweets', function (req, res) {
+=======
 app.get('/get-tweets', _serverSentEvents2.default, function (req, res) {
+>>>>>>> refs/remotes/origin/master
 
 	var lat = req.query.latitude;
 	var lon = req.query.longitude;
 
 	var processedTweets = [];
 
+<<<<<<< HEAD
+	_twitterservice2.default.getTweetsBySearchTerm(search, function (tweets) {
+
+		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {
+			processedTweets.push(processTweet(tweet));
+		});
+
+		res.json(processedTweets);
+	});
+=======
 	var params = {
 		screen_name: 'nodejs',
 		geocode: lat + ',' + lon + ',' + 10 + 'mi'
@@ -107,6 +148,7 @@ app.get('/get-tweets', _serverSentEvents2.default, function (req, res) {
 	// 		res.sse('data: ' + processedTweet + '\n\n');			
 	// 	});
 	// });				
+>>>>>>> refs/remotes/origin/master
 });
 
 function processTweet(tweet, cb) {
@@ -117,6 +159,9 @@ function processTweet(tweet, cb) {
 	tweetModel.when = tweet.created_at;
 	tweetModel.text = tweet.text;
 	tweetModel.location = tweet.user.location;
+
+	tweetModel.geo = tweet.geo;
+	tweetModel.coordinates = tweet.coordinates;
 
 	// text processing
 	tweetModel.textScore = (0, _sentiment2.default)(tweet.text).score;
