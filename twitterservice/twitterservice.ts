@@ -6,7 +6,6 @@ var Twitter = require('twitter');
 var GeoCoder = require('node-geocoder')(geocoderProvider, httpAdapter);
 var Moment = require('moment');
 var _ = require('lodash');
-//var ObjectID = require('mongodb').ObjectID;
 import geolocation from "../models/geolocation";
 import repository from "../repository/repository";
 import tweetdatamodel from "../models/tweetdatamodel";
@@ -31,32 +30,32 @@ export class twitterservice {
         this.repository = new repository();
     }
     getTweetsAroundLocation(geolocation, distance){
-        
+
         if(geolocation.name != ""){
-            
-            this.geocoder.geocode(geolocation.name).then((results) => {                
-                
+
+            this.geocoder.geocode(geolocation.name).then((results) => {
+
                 var coords = results[0];
-                                                                                           
+
                 this.params = {
                     screen_name: 'nodejs',
                     geocode: coords.latitude + ',' + coords.longitude + ',' + distance + 'mi'
-                };                
-                
+                };
+
                 this.client.get(this.querystring, this.params, (error, tweets, response) => {
-                    
+
                     // console.log(error);
                     // console.log(tweets);
                     // console.log(response);
-                    
+
                     if (!error) {
                         //console.log(tweets);
                         this.cb(tweets);
                     }
-                });                
-                
+                });
+
             });
-                        
+
 
         }
         else{
@@ -73,40 +72,40 @@ export class twitterservice {
 
 
     }
-    
-    getTweets2(cb) {        
-            
+
+    getTweets2(cb) {
+
         var allTweets = [];
-                                
+
         var locations = [
            // { latitude: 53.483959, longitude: -2.244644},
             //{ latitude: 51.4545, longitude: 2.5879 },
             { latitude: 52.4862, longitude: 1.8904 }
             ];
-            
+
         for (var index = 0; index < locations.length; index++) {
-            
+
             var obj = locations[index];
             var params = {
                 screen_name : 'nodejs',
                 geocode : obj.latitude + ',' + obj.longitude + ',' + 10 + 'mi'
             };
-                                            
-            this.client.get(this.querystring, params, (error, tweets, response) => {   
-                //allTweets.push(tweets);   
-                
-                //console.log(tweets);      
-                                
+
+            this.client.get(this.querystring, params, (error, tweets, response) => {
+                //allTweets.push(tweets);
+
+                //console.log(tweets);
+
                 //if(index === locations.length) {
                     cb(tweets)
-                //}           
-            });                        
-            
-        }
-        
-        
+                //}
+            });
 
-        
+        }
+
+
+
+
     }
 
     getTweets(callback){
@@ -124,9 +123,9 @@ export class twitterservice {
     }
     getTweetsFromApiAndConvertToViewModel(){
         var data = this.getTweetsFromApi();
-                
-        return this.convertTweetsToViewModel(data);        
-        
+
+        return this.convertTweetsToViewModel(data);
+
     }
     getTweetsFromApiAndConvertToDataModel(){
         var tweets = this.getTweetsFromApi();
@@ -160,9 +159,9 @@ export class twitterservice {
         return this.repository.getTweets();
     }
     getTweetsFromApi() : any{
-        
+
         this.getTweetsAroundLocation(new geolocation(0,0,'Manchester'), 10);
-        
+
         // return {
         //     'manchester': this.getTweetsAroundLocation(new geolocation(0,0,'Manchester'), 10),
         //     'bristol': this.getTweetsAroundLocation(new geolocation(0,0,'Bristol'), 10),

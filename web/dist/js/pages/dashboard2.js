@@ -6,7 +6,21 @@ $(function () {
    * -------
    * Here we will create a few charts using ChartJS
    */
-   
+
+   var url = '/get-tweets';
+
+   $.getJSON(url,
+    function (json) {
+        var tr;
+        for (var i = 0; i < json.length; i++) {
+            tr = $('<tr/>');
+            tr.append("<td>" + json[i].User_Name + "</td>");
+            tr.append("<td>" + json[i].score + "</td>");
+            tr.append("<td>" + json[i].team + "</td>");
+            $('table').append(tr);
+        }
+    });
+
    $.ajax({
      url: '/get-tweets',
      dataType: 'json',
@@ -18,12 +32,30 @@ $(function () {
      }
    });
 
-function showTweets() {
-  
-  //var html = 
-  
-  $('tweetTable').html();
-  
+function showTweets(data) {
+
+var json = [
+    {
+        location: 'manchester',
+        positive: '4',
+        negative: '10'
+    },
+    {
+        location: 'bristol',
+        positive: '18',
+        negative: '25'
+    }
+];
+//TODO need to get json and work out format, then process data into correct format
+  //var html =
+  var tr;
+  for (var i = 0; i < json.length; i++) {
+      tr = $('<tr/>');
+      tr.append("<td>" + json[i].location + "</td>");
+      tr.append("<td>" + json[i].positive + "</td>");
+      tr.append("<td>" + json[i].negative + "</td>");
+      $('tweetTable').append(tr);
+  }
 }
 
   //-----------------------
@@ -224,7 +256,7 @@ function showTweets() {
       {latLng: [53.48, -2.24], name: 'Manchester'},
       {latLng: [54.98, -1.59], name: 'Newcastle'},
       {latLng: [55.95, -3.18], name: 'Edinburgh'},
-      {latLng: [55.83, -4.24], name: 'Glasglow'},                                                                                                                                                                  
+      {latLng: [55.83, -4.24], name: 'Glasglow'},
     ]
   });
 
