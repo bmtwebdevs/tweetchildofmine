@@ -12,10 +12,10 @@ var tweetviewmodel_1 = require("../models/tweetviewmodel");
 var twitterservice = (function () {
     function twitterservice() {
         this.client = new Twitter({
-            consumer_key: 'eUrQiF8aIzmciweik1R391P0x',
-            consumer_secret: 'Ivvr3aWsoIcZguORoi5masZIpI25P7uhByIYJ04nB09b80Jwzn',
-            access_token_key: '1419001915-tjtKTbNqYp0pNPU2pzhjTvW2qJ3I7S73f1zeHHr',
-            access_token_secret: 'w1wEcUu35vmuaP4VeqO3M6RLtX8AEonQ5neTy0THQvwZp'
+            consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
+            consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
+            access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
+            access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
         });
         this.params = {};
         this.querystring = 'search/tweets/';
@@ -50,21 +50,19 @@ var twitterservice = (function () {
             });
         }
     };
-    twitterservice.prototype.getTweets2 = function (cb) {
-        var allTweets = [];
-        var locations = [
-            { latitude: 52.4862, longitude: 1.8904 }
-        ];
-        for (var index = 0; index < locations.length; index++) {
-            var obj = locations[index];
-            var params = {
-                screen_name: 'nodejs',
-                geocode: obj.latitude + ',' + obj.longitude + ',' + 10 + 'mi'
-            };
-            this.client.get(this.querystring, params, function (error, tweets, response) {
-                cb(tweets);
-            });
-        }
+    twitterservice.prototype.getTweetsBySearchTerm = function (search, cb) {
+        console.log(search);
+        this.client.get(this.querystring, { screen_name: 'nodejs', q: search }, function (error, tweets, response) {
+            console.log(error);
+            cb(tweets);
+        });
+    };
+    twitterservice.prototype.getTweetsByLocation = function (location, cb) {
+        console.log(location);
+        this.client.get(this.querystring, { screen_name: 'nodejs', geocode: location.lat + ',' + location.lon + ',' + 10 + 'mi' }, function (error, tweets, response) {
+            console.log(error);
+            cb(tweets);
+        });
     };
     twitterservice.prototype.getTweets = function (callback) {
         this.cb = callback;

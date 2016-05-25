@@ -6,11 +6,31 @@ $(function () {
    * -------
    * Here we will create a few charts using ChartJS
    */
+
+
+   // $('#search-btn').on('click', function(){
+   //
+   //     $.ajax({
+   //       url: '/get-tweets?search=',
+   //       dataType: 'json',
+   //       success: function(data) {
+   //         //data.then((result) => {
+   //           console.log(data);
+   //         //})
+   //         showTweets(data);
+   //       }
+   //     });
+   //    //showTweets();
+   // });
+
   var tweetEvent = new EventSource("tweet-stream");
-  
+
   tweetEvent.onmessage = function(e) {
     if(e.data) {
       var tweet = JSON.parse(e.data);
+      var emotion = (tweet.faceEmotion) ? tweet.faceEmotion + " " + tweet.textScore : tweet.textScore;
+      
+      
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
       $("#media-body").prepend(
         "<class='media-left'><img class='media-object'' src='" +tweet.picture +
@@ -29,29 +49,66 @@ $(function () {
   //     { latitude: 51.4545, longitude: 2.5879 },
   //     { latitude: 52.4862, longitude: 1.8904 }
   //     ];
-      
+
   //     for (var index = 0; index < locations.length; index++) {
   //         var element = locations[index];
-          
+
   //           $.ajax({
   //             url: '/get-tweets',
   //             data: element,
   //             dataType: 'json',
   //             success: function(data) {
-  //               console.log(data);                      
+  //               console.log(data);
   //               showTweets(data);
   //             }
   //         });
-          
-  //     }      
+
+  //     }
+
+function getInitialData(){
+    var locations = ['manchester','bristol','birmingham','edinburgh','london']
+
+    for(var i = 0; i < locations.length; i++){
+
+    }
+
+    $.ajax({
+      url: '/get-tweets?search=manchester',
+      dataType: 'json',
+      success: function(data) {
+        //data.then((result) => {
+          console.log(data);
+        //})
+        showTweets(data);
+      }
+    });
+}
 
 
-function showTweets() {
-  
-  //var html = 
-  
-  $('tweetTable').html();
-  
+function showTweets(data) {
+
+    var json = [
+        {
+            location: 'manchester',
+            positive: '4',
+            negative: '10'
+        },
+        {
+            location: 'bristol',
+            positive: '18',
+            negative: '25'
+        }
+    ];
+    //TODO need to get json and work out format, then process data into correct format
+    var tr;
+    for (var i = 0; i < json.length; i++) {
+        tr = $('<tr>');
+        tr.append("<td>" + json[i].location + "</td>");
+        tr.append("<td>" + json[i].positive + "</td>");
+        tr.append("<td>" + json[i].negative + "</td>");
+        tr.append("</tr>");
+        $('#tweettable').append(tr);
+    }
 }
 
   //-----------------------
@@ -252,7 +309,7 @@ function showTweets() {
       {latLng: [53.48, -2.24], name: 'Manchester'},
       {latLng: [54.98, -1.59], name: 'Newcastle'},
       {latLng: [55.95, -3.18], name: 'Edinburgh'},
-      {latLng: [55.83, -4.24], name: 'Glasglow'},                                                                                                                                                                  
+      {latLng: [55.83, -4.24], name: 'Glasglow'},
     ]
   });
 
