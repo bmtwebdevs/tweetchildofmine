@@ -48,7 +48,7 @@ $(function () {
     }
   
   }
-}
+
   
 var tweetEvent = new EventSource("tweet-stream?search=brexit");  
 tweetEvent.addEventListener('message', listenToMessages);
@@ -126,7 +126,7 @@ function updateLocationTable(tweetlocation, emotion){
       } 
       else{
         
-        var tweetlocationnospaces = tweetlocation.replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','');
+        var tweetlocationnospaces = tweetlocation.replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','').replace('@','at');
         
         var tr = $('<tr>');
         tr.append('<td class="location-names">' + tweetlocation + '</td>');
@@ -173,12 +173,12 @@ function isInLocationList(tweetlocation){
       }
     ).get();
     
-    var tweetlocationwithcharacterfilter = tweetlocation.replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','');
+    var tweetlocationwithcharacterfilter = tweetlocation.replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','').replace('@','at');
     
     for(var i = 0; i < existingLocations.length; i++){
         var id;
               
-        var existinglocationwithcharacterfilter = existingLocations[i].replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','');
+        var existinglocationwithcharacterfilter = existingLocations[i].replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','').replace('@','at');
               
         if(tweetlocation && tweetlocation.indexOf(existinglocationwithcharacterfilter) > -1){
           return existinglocationwithcharacterfilter;
@@ -187,31 +187,31 @@ function isInLocationList(tweetlocation){
     return false;
 }
 
-function showTweets(data) {
+// function showTweets(data) {
 
-    var json = [
-        {
-            location: 'manchester',
-            positive: '4',
-            negative: '10'
-        },
-        {
-            location: 'bristol',
-            positive: '18',
-            negative: '25'
-        }
-    ];
-    //TODO need to get json and work out format, then process data into correct format
-    var tr;
-    for (var i = 0; i < json.length; i++) {
-        tr = $('<tr>');
-        tr.append("<td>" + json[i].location + "</td>");
-        tr.append("<td>" + json[i].positive + "</td>");
-        tr.append("<td>" + json[i].negative + "</td>");
-        tr.append("</tr>");
-        $('#tweettable').append(tr);
-    }
-}
+//     var json = [
+//         {
+//             location: 'manchester',
+//             positive: '4',
+//             negative: '10'
+//         },
+//         {
+//             location: 'bristol',
+//             positive: '18',
+//             negative: '25'
+//         }
+//     ];
+//     //TODO need to get json and work out format, then process data into correct format
+//     var tr;
+//     for (var i = 0; i < json.length; i++) {
+//         tr = $('<tr>');
+//         tr.append("<td>" + json[i].location + "</td>");
+//         tr.append("<td>" + json[i].positive + "</td>");
+//         tr.append("<td>" + json[i].negative + "</td>");
+//         tr.append("</tr>");
+//         $('#tweettable').append(tr);
+//     }
+// }
 
 
 function emoticonStyle(emotion) {
