@@ -71,46 +71,62 @@ $(function () {
   //     }
 
 function updateLocationTable(tweetlocation, emotion){
-    
-    var existingLocations = $('.location-names').map(function(){
-        return this.innerText;
+       
+    var id;  
+
+    if(!tweetlocation){
+        if(emotion > 0){
+        id = '#unknown-positive-value';
       }
-    ).get();
-    
-    var id;
-    
-    for(var i = 0; i < tweetlocations.length; i++){
-        var id;
-              
-        if(tweetlocation && tweetlocation.indexOf(tweetlocations[i]) > -1){
-          if(emotion >= 0){
-            id = '#' + tweetlocation + '-positive-value';
-            break;
-          }
-          else if (emotion == 0){
-            id = '#' + tweetlocation + '-neutral-value';
-            break;
-          }
-          else{
-            id = '#' + tweetlocation + '-negative-value';
-            break;
-          }
-        }
-        else {
-          if(emotion > 0){
-            id = '#unknown-positive-value';
-            break;
-          }
-          else if (emotion == 0){
-            id = '#unknown-neutral-value';
-            break;
-          }
-          else{
-            id = '#unknown-negative-value';
-            break;
-          }        
-        }
+      else if (emotion == 0){
+        id = '#unknown-neutral-value';
+      }
+      else{
+        id = '#unknown-negative-value';
+      }        
     }
+
+    else {
+      
+      var inLocation = isInLocationList(tweetlocation);
+      
+      if(inLocation){
+        if(emotion >= 0){
+          id = '#' + inLocation.replace(' ','-') + '-positive-value';  
+        }
+        else if (emotion == 0){
+          id = '#' + inLocation.replace(' ','-') + '-neutral-value';
+        }
+        else{
+          id = '#' + inLocation.replace(' ','-') + '-negative-value';
+        }
+      }
+      
+      else{
+        
+        var tweetlocationnospaces = tweetlocation.replace(' ','-').replace('\'','-');
+        
+        var tr = $('<tr>');
+        tr.append('<td class="location-names">' + tweetlocation + '</td>');
+        tr.append('<td id="' + tweetlocationnospaces +'-positive-value" class="positive-tweet">' + '0' + '</td>');
+        tr.append('<td id="' + tweetlocationnospaces + '-negative-value" class="negative-tweet">' + '0' + '</td>');
+        tr.append('<td id="' + tweetlocationnospaces +'-neutral-value" class="neutral-tweet">' + '0' + '</td>');
+        tr.append('</tr>');
+        $('#tweettable').append(tr);
+        
+        if(emotion >= 0){
+          id = '#' + tweetlocationnospaces + '-positive-value';  
+        }
+        else if (emotion == 0){
+          id = '#' + tweetlocationnospaces + '-neutral-value';
+        }
+        else{
+          id = '#' + tweetlocationnospaces + '-negative-value';
+        }
+      }
+      
+    }
+    
     
     var value = parseInt($(id).text()) + 1;
     $(id).text(value.toString());
@@ -131,11 +147,16 @@ function updateLocationTable(tweetlocation, emotion){
 function isInLocationList(tweetlocation){
     var tweetlocations = ['Manchester','Bristol','Birmingham','Edinburgh','London']
     
-    for(var i = 0; i < tweetlocations.length; i++){
+    var existingLocations = $('.location-names').map(function(){
+        return this.innerText;
+      }
+    ).get();
+    
+    for(var i = 0; i < existingLocations.length; i++){
         var id;
               
-        if(tweetlocation && tweetlocation.indexOf(tweetlocations[i]) > -1){
-          return true;
+        if(tweetlocation && tweetlocation.indexOf(existingLocations[i]) > -1){
+          return existingLocations[i];
         }        
     }    
     return false;
