@@ -70,33 +70,45 @@ $(function () {
 
 function updateLocationTable(location, emotion){
     var locations = ['manchester','bristol','birmingham','edinburgh','london']
-
+    
+    var id;
+    
     for(var i = 0; i < locations.length; i++){
         var id;
         
-        if(location === locations[i]){
+        if(!location){
           if(emotion >= 0){
-            id = location + '-positive-value';
+            id = '#unknown-positive-value';
           }
           else{
-            id = location + '-negative-value';
+            id = '#unknown-negative-value';
+          }        
+        }
+        
+        if(location === locations[i]){
+          if(emotion >= 0){
+            id = '#' + location + '-positive-value';
           }
-          
-          var value = parseInt(document.getElementById(id).value) + 1;
-          $(id).text(value.toString());
+          else{
+            id = '#' + location + '-negative-value';
+          }
         }
     }
+    
+    var value = parseInt($(id).text()) + 1;
+    $(id).text(value.toString());
+    
 
-    $.ajax({
-      url: '/get-tweets?search=manchester',
-      dataType: 'json',
-      success: function(data) {
-        //data.then((result) => {
-          console.log(data);
-        //})
-        showTweets(data);
-      }
-    });
+    // $.ajax({
+    //   url: '/get-tweets?search=manchester',
+    //   dataType: 'json',
+    //   success: function(data) {
+    //     //data.then((result) => {
+    //       console.log(data);
+    //     //})
+    //     showTweets(data);
+    //   }
+    // });
 }
 
 
