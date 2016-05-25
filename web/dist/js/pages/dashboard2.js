@@ -32,6 +32,7 @@ $(function () {
       
       
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
+
       $("#media-body").prepend(
         "<class='media-left'><img class='media-object'' src='" +tweet.picture +
         "' alt='Img'>" +
@@ -41,6 +42,8 @@ $(function () {
         "</h5><h6>" + tweet.who +
         "</h6>" +
         "</div>");
+        
+       updateLocationTable(tweet.location, emotion);
     }
   } 
                                    
@@ -65,23 +68,47 @@ $(function () {
 
   //     }
 
-function getInitialData(){
+function updateLocationTable(location, emotion){
     var locations = ['manchester','bristol','birmingham','edinburgh','london']
-
+    
+    var id;
+    
     for(var i = 0; i < locations.length; i++){
-
+        var id;
+        
+        if(!location){
+          if(emotion >= 0){
+            id = '#unknown-positive-value';
+          }
+          else{
+            id = '#unknown-negative-value';
+          }        
+        }
+        
+        if(location === locations[i]){
+          if(emotion >= 0){
+            id = '#' + location + '-positive-value';
+          }
+          else{
+            id = '#' + location + '-negative-value';
+          }
+        }
     }
+    
+    var value = parseInt($(id).text()) + 1;
+    $(id).text(value.toString());
+    
 
-    $.ajax({
-      url: '/get-tweets?search=manchester',
-      dataType: 'json',
-      success: function(data) {
-        //data.then((result) => {
-          console.log(data);
-        //})
-        showTweets(data);
-      }
-    });
+    // $.ajax({
+    //   url: '/get-tweets?search=manchester',
+    //   dataType: 'json',
+    //   success: function(data) {
+    //     //data.then((result) => {
+    //       console.log(data);
+    //     //})
+    //     showTweets(data);
+    //   }
+    // });
 }
 
 
