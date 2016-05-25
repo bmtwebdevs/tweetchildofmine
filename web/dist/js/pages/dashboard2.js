@@ -208,6 +208,9 @@ function emoticonStyle(emotion) {
   } 
 }
 
+function scoreBg(emotion) {
+  
+}
   //-----------------------
   //- MONTHLY SALES CHART -
   //-----------------------
