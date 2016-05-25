@@ -46,24 +46,25 @@ $(function () {
     updateLocationTable(tweet.location, emotion);
   
   }
+}
   
-  var tweetEvent = new EventSource("tweet-stream?search=brexit");  
-  tweetEvent.addEventListener('message', listenToMessages);
-     
-   // 
-   function newSearch(param) {     
-     
-     tweetEvent.close();     
-     
-     tweetEvent.removeEventListener('message', listenToMessages);
-     
-     tweetEvent = null;
-     
-     tweetEvent = new EventSource("tweet-stream?search=" + param);
-     
-     tweetEvent.addEventListener('message', listenToMessages)
-     
-   }
+var tweetEvent = new EventSource("tweet-stream?search=brexit");  
+tweetEvent.addEventListener('message', listenToMessages);
+    
+  // 
+  function newSearch(param) {     
+    
+    tweetEvent.close();     
+    
+    tweetEvent.removeEventListener('message', listenToMessages);
+    
+    tweetEvent = null;
+    
+    tweetEvent = new EventSource("tweet-stream?search=" + param);
+    
+    tweetEvent.addEventListener('message', listenToMessages)
+    
+  }
 
   //var tweetEvent = new EventSource("tweet-stream?search=brexit");
 
@@ -89,8 +90,6 @@ $(function () {
 //        
 //     }
 //   } 
-
-var tweetlocations = ['Manchester','Bristol','Birmingham','Edinburgh','London'];
 
 function updateLocationTable(tweetlocation, emotion){
        
@@ -122,11 +121,10 @@ function updateLocationTable(tweetlocation, emotion){
         else{
           id = '#' + inLocation.replace(' ','-') + '-negative-value';
         }
-      }
-      
+      } 
       else{
         
-        var tweetlocationnospaces = tweetlocation.replace(' ','-').replace('\'','-');
+        var tweetlocationnospaces = tweetlocation.replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','');
         
         var tr = $('<tr>');
         tr.append('<td class="location-names">' + tweetlocation + '</td>');
@@ -168,17 +166,20 @@ function updateLocationTable(tweetlocation, emotion){
 
 function isInLocationList(tweetlocation){
     
-    
     var existingLocations = $('.location-names').map(function(){
         return this.innerText;
       }
     ).get();
     
+    var tweetlocationwithcharacterfilter = tweetlocation.replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','');
+    
     for(var i = 0; i < existingLocations.length; i++){
         var id;
               
-        if(tweetlocation && tweetlocation.indexOf(existingLocations[i]) > -1){
-          return existingLocations[i];
+        var existinglocationwithcharacterfilter = existingLocations[i].replace(' ','-').replace('\'','-').replace('!','').replace(',','').replace('/','').replace('\\','');
+              
+        if(tweetlocation && tweetlocation.indexOf(existinglocationwithcharacterfilter) > -1){
+          return existinglocationwithcharacterfilter;
         }        
     }    
     return false;
