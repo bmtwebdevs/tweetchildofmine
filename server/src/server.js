@@ -23,9 +23,8 @@ var client = new Twitter({
 // routes
 app.get('/', (req, res) => {
 
-
-
 	res.sendFile(path.normalize(__dirname + './../../web/index.html'));
+
 });
 
 app.use(express.static(path.normalize(__dirname + './../../web/')));
@@ -39,35 +38,44 @@ app.use(express.static(path.normalize(__dirname + './../../web/')));
 //
 // });
 //
+
 app.get('/tweet-stream', sse, (req, res) => {
 
-	var stream = client.stream('statuses/filter', {track: 'bristol'});
+	var bath = ['51.3758', '-2.3599'];
+	var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
+	var newYork = ['-74,40','-73,41'];
+
+	var stream = client.stream('statuses/filter', {track: 'sanFrancisco'});
 
 	stream.on('data', function(tweet) {
-
 		var processedTweet = JSON.stringify(processTweet(tweet));
 		res.sse('data:' + processedTweet + '\n\n');
-
 	});
 
 	stream.on('error', function(error) {
-		throw error;
+		console.log(error);
+		//res.json(error);
 	});
 
 });
 
-app.get('/get-tweets', sse, (req, res) => {
+// 		throw error;
+// 	});
+//
+// });
 
-	var lat = req.query.latitude;
-	var lon = req.query.longitude;
-
-	var processedTweets = [];
-
-
-	var params = {
-		screen_name : 'nodejs',
-		geocode : lat + ',' + lon + ',' + 10 + 'mi'
-	};
+// app.get('/get-tweets', sse, (req, res) => {
+//
+// 	var lat = req.query.latitude;
+// 	var lon = req.query.longitude;
+//
+// 	var processedTweets = [];
+//
+//
+// 	var params = {
+// 		screen_name : 'nodejs',
+// 		geocode : lat + ',' + lon + ',' + 10 + 'mi'
+// 	};
 
 	// this.client.get(this.querystring, params, (error, tweets, response) => {
 	// 	_(tweets.statuses).forEach((tweet) => {
@@ -75,7 +83,25 @@ app.get('/get-tweets', sse, (req, res) => {
 	// 		res.sse('data: ' + processedTweet + '\n\n');
 	// 	});
 	// });
+
+
+
+app.get('/get-tweets', (req, res) => {
+
+	var search = req.query.search;
+
+	var processedTweets = [];
+
+	ts.getTweets2(search, (tweets) => {
+
+		_(tweets.statuses).forEach((tweet) => {
+			processedTweets.push(processTweet(tweet));
+		});
+
+		res.json(processedTweets);
+	});
 });
+
 
 function processTweet(tweet) {
 

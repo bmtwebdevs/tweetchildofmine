@@ -73,39 +73,48 @@ export class twitterservice {
 
     }
 
-    getTweets2(cb) {
-
-        var allTweets = [];
-
-        var locations = [
-           // { latitude: 53.483959, longitude: -2.244644},
-            //{ latitude: 51.4545, longitude: 2.5879 },
-            { latitude: 52.4862, longitude: 1.8904 }
-            ];
-
-        for (var index = 0; index < locations.length; index++) {
-
-            var obj = locations[index];
-            var params = {
-                screen_name : 'nodejs',
-                geocode : obj.latitude + ',' + obj.longitude + ',' + 10 + 'mi'
-            };
-
-            this.client.get(this.querystring, params, (error, tweets, response) => {
-                //allTweets.push(tweets);
-
-                //console.log(tweets);
-
-                //if(index === locations.length) {
-                    cb(tweets)
-                //}
-            });
-
-        }
-
-
+    // getTweets2(cb) {
+    //
+    //     var allTweets = [];
+    //
+    //     var locations = [
+    //        // { latitude: 53.483959, longitude: -2.244644},
+    //         //{ latitude: 51.4545, longitude: 2.5879 },
+    //         { latitude: 52.4862, longitude: 1.8904 }
+    //         ];
+    //
+    //     for (var index = 0; index < locations.length; index++) {
+    //
+    //         var obj = locations[index];
+    //         var params = {
+    //             screen_name : 'nodejs',
+    //             geocode : obj.latitude + ',' + obj.longitude + ',' + 10 + 'mi'
+    //         };
+    //
+    //         this.client.get(this.querystring, params, (error, tweets, response) => {
+    //             //allTweets.push(tweets);
+    //
+    //             //console.log(tweets);
+    //
+    //             //if(index === locations.length) {
+    //                 cb(tweets)
+    //             //}
+    //         });
+    //
+    //     }
 
 
+    getTweets2(search, cb) {
+
+        console.log(search);
+
+        this.client.get(this.querystring, { screen_name: 'nodejs', q: search }, (error, tweets, response) => {
+
+            console.log(error);
+
+            cb(tweets)
+
+        });
     }
 
     getTweets(callback){
@@ -119,6 +128,7 @@ export class twitterservice {
         //TODO put keys into config file or similar?
 
         //TODO change this to getTweetsFromDatabase
+        
         this.getTweetsFromApiAndConvertToViewModel();
     }
     getTweetsFromApiAndConvertToViewModel(){
@@ -183,6 +193,9 @@ export class twitterservice {
     updateDbWithNewTweets(){
         var tweetsFromApi = this.getTweetsFromApiAndConvertToDataModel();
         return ;
+
+        //this.getTweetsFromApiAndConvertToViewModel();
+
     }
 }
 

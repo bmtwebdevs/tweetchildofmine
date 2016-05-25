@@ -73,33 +73,37 @@ app.use(_express2.default.static(_path2.default.normalize(__dirname + './../../w
 //
 // });
 //
+
 app.get('/tweet-stream', _serverSentEvents2.default, function (req, res) {
 
-	var stream = client.stream('statuses/filter', { track: 'bristol' });
+	var bath = ['51.3758', '-2.3599'];
+	var sanFrancisco = ['-122.75', '36.8', '-121.75', '37.8'];
+	var newYork = ['-74,40', '-73,41'];
+
+	var stream = client.stream('statuses/filter', { track: 'sanFrancisco' });
 
 	stream.on('data', function (tweet) {
-
 		var processedTweet = JSON.stringify(processTweet(tweet));
 		console.log(tweet, processedTweet);
 		res.sse('data:' + processedTweet + '\n\n');
 	});
 
 	stream.on('error', function (error) {
-		throw error;
+		console.log(error);
+		//res.json(error);
 	});
 });
 
-app.get('/get-tweets', _serverSentEvents2.default, function (req, res) {
+app.get('/get-tweets', function (req, res) {
 
-	var lat = req.query.latitude;
-	var lon = req.query.longitude;
+	var search = req.query.search;
 
 	var processedTweets = [];
 
-	var params = {
-		screen_name: 'nodejs',
-		geocode: lat + ',' + lon + ',' + 10 + 'mi'
-	};
+	// var params = {
+	// 	screen_name: 'nodejs',
+	// 	geocode: lat + ',' + lon + ',' + 10 + 'mi'
+	// };
 
 	// this.client.get(this.querystring, params, (error, tweets, response) => {
 	// 	_(tweets.statuses).forEach((tweet) => {
@@ -107,6 +111,14 @@ app.get('/get-tweets', _serverSentEvents2.default, function (req, res) {
 	// 		res.sse('data: ' + processedTweet + '\n\n');
 	// 	});
 	// });
+	_twitterservice2.default.getTweets2(search, function (tweets) {
+
+		(0, _lodash2.default)(tweets.statuses).forEach(function (tweet) {
+			processedTweets.push(processTweet(tweet));
+		});
+
+		res.json(processedTweets);
+	});
 });
 
 function processTweet(tweet) {
