@@ -1,3 +1,5 @@
+// make a .env file with the following variables:
+require('dotenv-safe').load();
 import express from 'express';
 import path from 'path';
 import http from 'http';
@@ -15,10 +17,10 @@ app.server = http.createServer(app);
 
 var test ='';
 var client = new Twitter({
-	consumer_key: 'CKMFkWRso9BXQ68NYR8ODjHHG',
-	consumer_secret: 'x04MYu3bpcz3yt63pJZuTfmxbBuWl7kdm79Mbu7Mh1wSi14Pts',
-	access_token_key: '131168610-cDDxo8FtunKk6cyx7ztN7jQYaI8ztMzhMhfea5k',
-	access_token_secret: 'kaHTr5FxRVYToam6YzbazVfq03ZkuvIvKw4swZXM'
+	consumer_key: process.env.TWITTER_CONSUMER_KEY,
+	consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+	access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+	access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
 // routes
