@@ -19,10 +19,10 @@ export class twitterservice {
     cb: any;
     constructor(){
         this.client = new Twitter({
-          consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
-          consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
-          access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
-          access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
+          consumer_key: 'INSERT HERE',
+          consumer_secret: 'INSERT HERE',
+          access_token_key: 'INSERT HERE',
+          access_token_secret: 'INSERT HERE'
         });
         this.params = {};
         this.querystring = 'search/tweets/';
