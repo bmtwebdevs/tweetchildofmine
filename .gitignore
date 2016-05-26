@@ -38,5 +38,4 @@ models/geolocation.js
 *.map
 server/lib/server.js
 
-# Enviromnental Variables (see env.example for what to put in here)
-.env
+
