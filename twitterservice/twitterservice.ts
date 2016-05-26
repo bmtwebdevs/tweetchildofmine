@@ -1,5 +1,7 @@
 ///<reference path="../models/geolocation.ts" />
 declare function require(name:string);
+declare var process: any;
+
 var geocoderProvider = 'google';
 var httpAdapter = 'http';
 var Twitter = require('twitter');
@@ -19,10 +21,10 @@ export class twitterservice {
     cb: any;
     constructor(){
         this.client = new Twitter({
-          consumer_key: 'INSERT HERE',
-          consumer_secret: 'INSERT HERE',
-          access_token_key: 'INSERT HERE',
-          access_token_secret: 'INSERT HERE'
+            consumer_key: process.env.TWITTER_CONSUMER_KEY,
+            consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+            access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+            access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
         });
         this.params = {};
         this.querystring = 'search/tweets/';
