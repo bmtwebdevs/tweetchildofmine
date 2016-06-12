@@ -12,10 +12,10 @@ var tweetviewmodel_1 = require("../models/tweetviewmodel");
 var twitterservice = (function () {
     function twitterservice() {
         this.client = new Twitter({
-            consumer_key: 'WnZDP58NPuK0C6Q2cJeTN2xNF',
-            consumer_secret: 'hAM1KCFF8ELnmTGy5oCxnNf2YYrBE2QsMxFIfszORMt4Q9nAGK',
-            access_token_key: '2256885018-BUTo3lPk4FC2rqwt8BQ8yS8MiWF4lknhNmlQFUB',
-            access_token_secret: 'mOChAobcfNdlNornATZZa4A35RCW3nf9YAsEGxzEivarm'
+            consumer_key: process.env.TWITTER_CONSUMER_KEY,
+            consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+            access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+            access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
         });
         this.params = {};
         this.querystring = 'search/tweets/';
