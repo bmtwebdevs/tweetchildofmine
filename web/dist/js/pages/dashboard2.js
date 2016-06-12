@@ -1,7 +1,13 @@
 $(function () {
 
   'use strict';
+
+  var tweetStreamStopped = false;
   
+  $('#toggleStream').click(function() {
+    
+    tweetStreamStopped = !tweetStreamStopped;
+  })
   
   $('#search-btn').click(function(e) {   
       
@@ -75,8 +81,13 @@ $(function () {
       var emotionface = tweet.faceScore;
       
       var emotionface1 = "";
-      if (tweet.faceScore) {
-        emotionface1 = "<b><i>Tweet Picture Emotion Level: </b></i><h1>" + emoticonStyle(emotionface) + "</h1></h5>"
+      
+      if (tweet.faceScore && emotionface != "none") {
+        var emoticon = emoticonStyle(emotionface);
+        //console.log("emotion test:", emotionface, emoticon, "emoticon = empty?", emoticon=="")
+        //if(emoticon != "") {
+          emotionface1 = "<b><i>Tweet Picture Emotion Level: </b></i><h1>" + emoticon + "</h1></h5>"
+        //}
       }
       
       var imagehtml = "";
@@ -87,17 +98,18 @@ $(function () {
       var bgHsl = scoreBg(parseInt(emotion, 10));
 
       // it would be better to add the tweet to a json object that the table and other parts of the page can read from
-      $("#media-body").prepend(
-        "<div class='tweet-panel' style='background-color:" + bgHsl + "'>" +
-        "<h4><b>" + tweet.text + 
-        "</b></h4><h5><b><i>Tweet Date & Time: </b></i>" + tweet.when + 
-        "</h5><h5><b><i>User: </b></i>" + tweet.userName +
-        "</h5>" + imagehtml +         
-        "<h5><b><i>Tweet Text Emotion Level: </b></i>" + emotion +
-        "</h5>"+
-        "<h5>" + emotionface1 +        
-        "</h5><hr size='3'/></div>");
-        
+      if(!tweetStreamStopped) {
+        $("#media-body").prepend(
+          "<div class='tweet-panel' style='background-color:" + bgHsl + "'>" +
+          "<h4><b>" + tweet.text + 
+          "</b></h4><h5><b><i>Tweet Date & Time: </b></i>" + tweet.when + 
+          "</h5><h5><b><i>User: </b></i>" + tweet.userName +
+          "</h5>" + imagehtml +         
+          "<h5><b><i>Tweet Text Emotion Level: </b></i>" + emotion +
+          "</h5>"+
+          "<h5>" + emotionface1 +        
+          "</h5><hr size='3'/></div>");
+      }  
     
       updateLocationTable(tweet.location, emotion);
     }
@@ -309,7 +321,7 @@ function emoticonStyle(emotion) {
     case "surprise":  return "😯";
     case "neutral": return "😐";  
     default:
-      return "😐";
+      return "";
   } 
 }
 
@@ -317,7 +329,7 @@ function scoreBg(emotion) {
   var h = 0, s = 100, b = 50;
   
   h = (emotion + 10) * 5;
-  console.log(emotion, "hue:", h, "sat", s);
+  //console.log(emotion, "hue:", h, "sat", s);
   var colour = "hsla(" + h + "," + s + "%,"+ b + "%, 1)";
   
   $("#tablecolours").append("<td style='background-color:" + colour +  "'>&nbsp;</td>");
